@@ -31,6 +31,8 @@ const PopUpModal = (props) => {
   });
   const dispatch = useDispatch();
 
+  
+
   // const submitOrder = () => {
   //   props.onNavigate
   //   // dispatch(addOrder(cartItems, cartTotalAmount));
@@ -52,6 +54,11 @@ const PopUpModal = (props) => {
             />
           </View>
             <View style={styles.screen}>
+              {cartItems.length === 0 ? (
+                <View style={styles.center}>
+                  <Text>No Item in Cart</Text>
+                </View>
+              ) : (
                 <FlatList
                   data={cartItems}
                   keyExtractor={(item) => item.productId}
@@ -73,17 +80,21 @@ const PopUpModal = (props) => {
                     />
                   )}
                 />
-                <TouchableOpacity 
-                    onPress={props.onSelect}>
-                <Card style={styles.Container}>
-                  <Text style={styles.placeOrder}>Checkout</Text>
-                  <View>
-                    <Text style={styles.amount}>
-                      ৳{Math.round(cartTotalAmount)}
-                    </Text>
-                  </View>
-                </Card>
-              </TouchableOpacity>
+              )}
+                {cartItems.length > 0  &&(
+                  <TouchableOpacity 
+                      onPress={props.onSelect}>
+                    <Card style={styles.Container}>
+                      <Text style={styles.placeOrder}>Checkout</Text>
+                      <View>
+                        <Text style={styles.amount}>
+                          ৳{Math.round(cartTotalAmount)}
+                        </Text>
+                      </View>
+                    </Card>
+                  </TouchableOpacity>
+                )}
+                
             </View>
         </View>
        </View>
@@ -99,12 +110,13 @@ const styles = StyleSheet.create({
   ModalView: { 
       flex: 1,
       justifyContent: 'flex-end',
-      alignItems: 'center' 
+      alignItems: 'center',
+      // backgroundColor: Colors.primary, 
   },
   ModalHeight: {
   width: "100%",
   height: "100%",
-  paddingTop: 200,
+  paddingTop: 100,
   backgroundColor: "#00000090"
   },
   buttonContainer: {
@@ -146,6 +158,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     borderRadius: 10
   },
+  center: {
+    flex:1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.white,
+    borderTopRightRadius:20,
+    borderTopLeftRadius:20,
+
+  }
 });
 
 export default PopUpModal;

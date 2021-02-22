@@ -14,9 +14,12 @@ import ProductsOverviewScreen, {
 import ProductDetailScreen, {
   screenOptions as productDetailScreenOptions,
 } from "../screens/shop/ProductDetailScreen";
-import CartScreen, {
-  screenOptions as cartScreenOptions,
-} from "../screens/shop/CartScreen";
+import ShippingScreen, {
+  screenOptions as ShippingScreenOptions,
+} from "../screens/shop/ShippingScreen";
+import ConfirmScreen, {
+  screenOptions as ConfirmScreenOptions,
+} from "../screens/shop/ConfirmScreen";
 import OrdersScreen, {
   screenOptions as ordersScreenOptions,
 } from "../screens/shop/OrdersScreen";
@@ -61,14 +64,14 @@ export const ProductsNavigator = () => {
       />
       <ProductsStackNavigator.Screen
         name="Cart"
-        component={CartScreen}
-        options={cartScreenOptions}
+        component={ShippingScreen}
+        options={ShippingScreenOptions}
       />
-      {/* <ProductsStackNavigator.Screen
-        name="Cat"
-        component={CategoryScreen}
-        options={CategoryScreenOptions}
-      /> */}
+      <ProductsStackNavigator.Screen
+        name="Confirm"
+        component={ConfirmScreen}
+        options={ConfirmScreenOptions}
+      />
       <ProductsStackNavigator.Screen
         name="CatPod"
         component={CategoryProdScreen}
@@ -117,7 +120,8 @@ const categories = useSelector((state) => state.Data.saveCategory);
                         onPress={() => {
                           props.navigation.navigate("CatPod", {
                             id: category.type_id,
-                            title: category.product_type
+                            title: category.product_type,
+                            subMenu: category.sub_menu
                           });
                         }}
                         >
