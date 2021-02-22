@@ -10,6 +10,7 @@ import {
 } from "../actions/Data";
 
 const initialState = {
+  items: {},
   saveProduct: [],
   saveCategory: [],
   saveOrder: [],
@@ -21,6 +22,13 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'UPDATE_LIST_RESULTS':
+
+      const nState = Object.assign({}, state, {
+        items: action.items
+      });
+      return nState;
+
     case SAVE_PRODUCT:
       return {
         ...state,

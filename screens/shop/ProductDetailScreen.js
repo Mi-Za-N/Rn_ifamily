@@ -8,22 +8,21 @@ import {
   StyleSheet,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-
+import { IMAGE_URL} from "../../BaseUrl";
 import Colors from "../../constants/Colors";
 import { addToCart } from "../../store/actions/cart";
 
 const ProductDetailScreen = (props) => {
-  const productId = props.route.params?.productId ?? "id";
-  const selectedProduct = useSelector((state) =>
-    state.Data.saveCategory.find((prod) => prod.product_id === productId)
-  );
+  const product= props.route.params.item;
+  const title= props.route.params.title;
+  
 
 
   const cartItem = useSelector((state) => state.cart.items);
   let quantity = 0;
   for (const key in cartItem) {
     key;
-    if (key === productId) {
+    if (key === product.product_id) {
       quantity = cartItem[key].quantity;
     }
   }
@@ -34,12 +33,12 @@ const ProductDetailScreen = (props) => {
     <ScrollView>
       <View style={styles.imageContainer}>
         <Image style={styles.image} 
-        source={{ uri: selectedProduct.image }} />
+        source={{ uri: IMAGE_URL + product.type_id+'/'+ product.app_pic1 }} />
       </View>
       <View style={styles.details}>
         
-        <Text style={styles.price}>Price: ৳{selectedProduct.price.toFixed(2)}</Text>
-        <Text style={styles.description}>{selectedProduct.description}</Text>
+        <Text style={styles.price}>Price: ৳{product.sale_price}</Text>
+        {/* <Text style={styles.description}>{product.description}</Text> */}
         <View style={styles.actions}>
           <Button
              buttonStyle={{
@@ -57,7 +56,7 @@ const ProductDetailScreen = (props) => {
             color={Colors.primary}
             title="Add to Cart"
             onPress={() => {
-              dispatch(addToCart(selectedProduct));
+              dispatch(addToCart(product));
             }}
           />
         </View>
@@ -67,7 +66,7 @@ const ProductDetailScreen = (props) => {
 };
 export const screenOptions = (navData) => {
   return {
-    headerTitle: navData.route.params.productTitle,
+    headerTitle: navData.route.params.title,
   };
 };
 

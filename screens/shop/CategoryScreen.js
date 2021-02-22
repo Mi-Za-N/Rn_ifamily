@@ -2,7 +2,11 @@ import React, {useState} from 'react';
 import { View,Text, StyleSheet,ScrollView, TouchableOpacity,Image } from 'react-native';
 import Colors from "../../constants/Colors";
 
-const CategoryScreen = ({subMenu }) => {
+const CategoryScreen = ({subMenu, clickOnCategory }) => {
+  const onCategoryClick = (id) => {
+      // clickOnCategory(id)
+    console.log(id);  
+  };
   return (
       <ScrollView
         horizontal
@@ -13,8 +17,9 @@ const CategoryScreen = ({subMenu }) => {
           <TouchableOpacity
             key={sm.subtype_id}
             activeOpacity={0.8}
-            // onPress={() => setSelectedCategoryIndex(sm)}
-            >
+            onPress={() => {
+                onCategoryClick(sm.subtype_id);
+             }}>
             <View
               style={{backgroundColor: Colors.primary,
                 ...styles.categoryBtn}}>

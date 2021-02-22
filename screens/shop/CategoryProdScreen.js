@@ -49,7 +49,7 @@ export default function App (props) {
   return obj;
 }
 
-  const listItems = useSelector(state => state.list.items);
+  const listItems = useSelector(state => state.Data.items);
 
   const totalItems = Array.isArray(listItems) ? listItems.length : 0;
  
@@ -139,14 +139,19 @@ export default function App (props) {
     setLoadingMore(false);
   }
 
+// const loadDataOnClick = (id) => {
+//   console.log(id);
+//     // dispatch(clickedProduct(listItems));
+//   }
+
 
   
 
 
-   const selectItemHandler = (product_id, product_title_eng) => {
+   const selectItemHandler = (item, product_title_eng) => {
     props.navigation.navigate("ProductDetail", {
-      productId: product_id,
-      productTitle: product_title_eng,
+      item: item,
+      title: product_title_eng
     });
   };
 
@@ -175,15 +180,15 @@ export default function App (props) {
         data={listItems}
         keyExtractor={(item) => item.product_id}
         numColumns={2}
-        renderItem={(itemData) => (
+        renderItem={({item}) => (
         <ProductItem
-          id={itemData.item.product_id}
-          product={itemData.item}
-          image={IMAGE_URL + itemData.item.type_id+'/'+ itemData.item.app_pic1}
-          title={itemData.item.product_title_eng}
-          price={itemData.item.sale_price}
+          id={item.product_id}
+          product={item}
+          image={IMAGE_URL + item.type_id+'/'+ item.app_pic1}
+          title={item.product_title_eng}
+          price={item.sale_price}
           onSelect={() => {
-            selectItemHandler(itemData.item.product_id, itemData.item.product_title_eng);
+            selectItemHandler(item, item.product_title_eng);
           }}
         />
       )}

@@ -9,7 +9,6 @@ import cartReducer from "./store/reducers/cart";
 import ordersReducer from "./store/reducers/orders";
 import Data from "./store/reducers/Data";
 import ShopNavigator from "./navigation/ShopNavigator";
-import { list } from './loadMore/reducers/list';
 
 const initialState = {};
 const reducer = combineReducers({
@@ -17,7 +16,6 @@ const reducer = combineReducers({
   cart: cartReducer,
   orders: ordersReducer,
   Data: Data,
-  list
 });
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(

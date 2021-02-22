@@ -58,7 +58,7 @@ const ProductsOverviewScreen = (props) => {
           title={item.product_title_eng}
           price={item.sale_price}
           onSelect={() => {
-            selectItemHandler(item.product_id, item.product_title_eng);
+            selectItemHandler(item, item.product_title_eng);
           }}
         />
     );
@@ -66,8 +66,7 @@ const ProductsOverviewScreen = (props) => {
   const memoizedValue = useMemo(() => renderItem, [products]);
   const dispatch = useDispatch();
   const products = useSelector((state) => state.Data.saveProduct);
-    // const products = useSelector((state) =>
-    //  state.Data.saveProduct.filter((product) =>product.type_id === 3));
+   
   
   useEffect(() => {
     axios.get(baseURL)
@@ -143,10 +142,10 @@ const ProductsOverviewScreen = (props) => {
     ),
   });
 
-   const selectItemHandler = (product_id, name) => {
+   const selectItemHandler = (item, product_title_eng) => {
     props.navigation.navigate("ProductDetail", {
-      productId: product_id,
-      productTitle: name,
+      item: item,
+      title: product_title_eng
     });
   };
 
