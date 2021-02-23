@@ -25,8 +25,8 @@ const CategoryScreen = ({subMenu, clickOnCategory }) => {
                 ...styles.categoryBtn}}>
               <Text
                 style={{
-                  fontSize: 12,
-                  fontWeight: 'bold',
+                  fontSize: 14,
+                  fontWeight: "bold",
                   marginHorizontal: 5,
                   color:Colors.white,
                 }}>

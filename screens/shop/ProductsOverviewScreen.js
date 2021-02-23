@@ -20,6 +20,7 @@ import CartButton from "../../components/shop/CartButton";
 import Banner from "../../components/UI/Banner";
 import { saveProduct } from "../../store/actions/Data";
 import { saveCategory } from "../../store/actions/Data";
+import { searchProduct  } from "../../store/actions/Data";
 
 
 const ProductsOverviewScreen = (props) => {
@@ -32,23 +33,6 @@ const ProductsOverviewScreen = (props) => {
   const cancelModal = () => {
     setIsAddMode(false);
   };
-  const cartItems = useSelector((state) => {
-    const transformedCartItems = [];
-    for (const key in state.cart.items) {
-      transformedCartItems.push({
-        productId: key,
-        productTitle: state.cart.items[key].productTitle,
-        productPrice: state.cart.items[key].productPrice,
-        productImage: state.cart.items[key].productImage,
-        quantity: state.cart.items[key].quantity,
-        sum: state.cart.items[key].sum,
-      });
-    }
-    return transformedCartItems.sort((a, b) =>
-      a.productId > b.productId ? 1 : -1
-    );
-  });
-
 
    const renderItem = ({ item }) => (
         <ProductItem
@@ -113,6 +97,11 @@ const ProductsOverviewScreen = (props) => {
     );
   }
 
+  const searchProductHandler = (text) => {
+    console.log(text);
+    dispatch(searchProduct(text));
+  };
+
   props.navigation.setOptions({
     headerRight: () => (
       <View style={{ flexDirection: "row" }}>
@@ -126,7 +115,9 @@ const ProductsOverviewScreen = (props) => {
             backgroundColor: "white",
           }}
         >
-          <TextInput placeholder="Search..." style={{ padding: 5 }} />
+          <TextInput 
+          onChangeText={(text) => searchProductHandler(text)}
+          placeholder="Search..." style={{ padding: 5 }} />
         </View>
 
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
