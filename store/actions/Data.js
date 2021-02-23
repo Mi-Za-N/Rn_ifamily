@@ -6,6 +6,7 @@ export const CLICKED_PRODUCT = "CLICKED_PRODUCT";
 export const IS_UPDATED = "IS_UPDATED";
 export const IS_OPEN = "IS_OPEN";
 export const IS_LOGIN = "IS_LOGIN";
+export const SUBTYPE_PRODUCT_INFO = "SUBTYPE_PRODUCT_INFO";
 
 
 export const saveProduct = (data) => {
@@ -23,6 +24,10 @@ export const saveOrder = (data) => {
 
 export const searchProduct = (data) => {
   return { type: SEARCH_PRODUCT, payload: data };
+};
+
+export const subMenuProduct = (data) => {
+  return { type: SUBTYPE_PRODUCT_INFO, payload: data };
 };
 
 export const clickedProduct = (data) => {

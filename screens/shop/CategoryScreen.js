@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
+import { useDispatch } from 'react-redux';
 import { View,Text, StyleSheet,ScrollView, TouchableOpacity,Image } from 'react-native';
 import Colors from "../../constants/Colors";
+import { subMenuProduct } from "../../store/actions/Data";
 
-const CategoryScreen = ({subMenu, clickOnCategory }) => {
+const CategoryScreen = ({subMenu }) => {
+  const dispatch = useDispatch(); 
   const onCategoryClick = (id) => {
-      // clickOnCategory(id)
+      dispatch(subMenuProduct(id));
     console.log(id);  
   };
   return (

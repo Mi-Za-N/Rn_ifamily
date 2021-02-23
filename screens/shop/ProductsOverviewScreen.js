@@ -34,6 +34,23 @@ const ProductsOverviewScreen = (props) => {
     setIsAddMode(false);
   };
 
+
+   useEffect(() => {
+    axios.get(baseURL)
+      .then((res) => {
+        setSidebar(res.data.menu_item);
+        dispatch(saveCategory(res.data.menu_item));
+        dispatch(saveProduct(res.data.allProductInfo));
+        // console.log(res.data.menu_item);
+        setLoading(false);
+        setLoadData(false);
+      })
+      .catch((error) => {
+        console.log('Api call error');
+        setError(true)
+      })
+  }, []);
+
    const renderItem = ({ item }) => (
         <ProductItem
           id={item.product_id}
@@ -51,22 +68,6 @@ const ProductsOverviewScreen = (props) => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.Data.saveProduct);
    
-  
-  useEffect(() => {
-    axios.get(baseURL)
-      .then((res) => {
-        setSidebar(res.data.menu_item);
-        dispatch(saveCategory(res.data.menu_item));
-        dispatch(saveProduct(res.data.allProductInfo));
-        // console.log(res.data.menu_item);
-        setLoading(false);
-        setLoadData(false);
-      })
-      .catch((error) => {
-        console.log('Api call error');
-        setError(true)
-      })
-  }, []);
 
     if (error) {
     return (
@@ -133,7 +134,7 @@ const ProductsOverviewScreen = (props) => {
     ),
   });
 
-   const selectItemHandler = (item, product_title_eng) => {
+ const selectItemHandler = (item, product_title_eng) => {
     props.navigation.navigate("ProductDetail", {
       item: item,
       title: product_title_eng
@@ -204,70 +205,80 @@ const styles = StyleSheet.create({
 
 export default ProductsOverviewScreen;
 
-// import React, { useState, useEffect } from 'react';
-// import Colors from "../../constants/Colors";
+
+
+
+
+
+// import React, {useEffect, useState, useMemo } from "react";
 // import axios from "axios";
-// import AsyncStorage from '@react-native-community/async-storage';
-// import { FlatList, View, Text, SafeAreaView,ActivityIndicator,StyleSheet,Button } from 'react-native';
-// import { useSelector, useDispatch } from 'react-redux';
+// import {
+//   FlatList,
+//   Text,
+//   View,
+//   Button,
+//   StyleSheet,
+//   TextInput,
+//   ActivityIndicator
+// } from "react-native";
 // import delay from 'delay';
-// import {baseURL, IMAGE_URL} from "../../BaseUrl";
+// import { useSelector, useDispatch } from "react-redux";
+// import AsyncStorage from '@react-native-community/async-storage';
 // import ProductItem from "../../components/shop/ProductItem";
+// import { HeaderButtons, Item } from "react-navigation-header-buttons";
+// import HeaderButton from "../../components/UI/HeaderButton";
+// import {baseURL, IMAGE_URL} from "../../BaseUrl";
+// import Colors from "../../constants/Colors";
 // import PopUpModal from "../../components/shop/PopUpModal"
 // import CartButton from "../../components/shop/CartButton";
-// import { saveProduct } from "../../store/actions/Data";
-// import { saveCategory } from "../../store/actions/Data";
+// import Banner from "../../components/UI/Banner";
+// import { saveProduct,saveCategory, searchProduct, updateProductlist } from "../../store/actions/Data";
 
-// export default function App (props) {
-//     const [sidebarItem, setSidebar] = useState([]);
-//     const [loadingMore, setLoadingMore] = useState(false);
+
+// const ProductsOverviewScreen = (props) => {
+//   const [data, setData] = useState([]);
+//   const [sidebarItem, setSidebar] = useState([]);
+//   const [loading, setLoading] = useState(true)
+//   const [error, setError] = useState(false)
+//   const [loadData, setLoadData] = useState(true)
+//   const [loadingMore, setLoadingMore] = useState(false);
 //     const [allLoaded, setAllLoaded] = useState(false);
-//     const [loading, setLoading] = useState(true)
-//     const [error, setError] = useState(false)
-//     // const [data, setData] = useState([]);
-//     const [loadData, setLoadData] = useState(true)
+
+//   const [isAddMode, setIsAddMode] = useState(false);
+//   const cancelModal = () => {
+//     setIsAddMode(false);
+//   };
+
+//   useEffect(() => {
+//     axios.get(baseURL)
+//       .then((res) => {
+//         setSidebar(res.data.menu_item);
+//         dispatch(saveCategory(res.data.menu_item));
+//         dispatch(saveProduct(res.data.allProductInfo));
+//         setData(res.data.allProductInfo);
+//         // console.log(res.data.menu_item);
+//         setLoading(false);
+//         setLoadData(false);
+//       })
+//       .catch((error) => {
+//         console.log('Api call error');
+//         setError(true)
+//       })
+//   }, []);
 
 
-//       const dispatch = useDispatch();
-//       const data = useSelector((state) => state.Data.saveProduct);
-//       // console.log(data);
-      
-//       useEffect(() => {
-//         axios.get(baseURL)
-//           .then((res) => {
-//             setSidebar(res.data.menu_item);
-//             dispatch(saveCategory(res.data.menu_item));
-//             dispatch(saveProduct(res.data.allProductInfo));
-//             // console.log(res.data.menu_item);
-//             setLoading(false);
-//             setLoadData(false);
-//           })
-//           .catch((error) => {
-//             console.log('Api call error');
-//             setError(true)
-//           })
-//       }, []);
+//    const RECORDS_PER_FETCH = 20;
+//     const fetchResults = (startingId = 0) => {
+//     let obj = [];
+  
+//     for (let i = startingId; i < startingId + RECORDS_PER_FETCH; i++) {
+//       if (data[i] === undefined)
+//         break;
 
-
-
-//   const RECORDS_PER_FETCH = 12;
-//   const fetchResults = (startingId = 0) => {
-//   let obj = [];
- 
-//   for (let i = startingId; i < startingId + RECORDS_PER_FETCH; i++) {
-//     if (data[i] === undefined)
-//       break;
-
-//     obj.push(data[i]);
+//       obj.push(data[i]);
+//     }
+//     return obj;
 //   }
-//   return obj;
-// }
-
-//   const listItems = useSelector(state => state.list.items);
-//   // console.log(listItems);
-//   const totalItems = Array.isArray(listItems) ? listItems.length : 0;
- 
-
 
 //   useEffect(() => {
 //     initialiseList();
@@ -294,11 +305,12 @@ export default ProductsOverviewScreen;
 //       json = JSON.parse(curItems);
 //     }
 
-//     // update Redux store (Redux will ignore if `json` is same as current list items)
+//     // update Redux store (Redux will ignore if `json` is same as current list items) 
 //     dispatch({
 //       type: 'UPDATE_LIST_RESULTS',
 //       items: json
 //     });
+//     // dispatch(updateProductlist);
 //   }
 
 
@@ -325,6 +337,7 @@ export default ProductsOverviewScreen;
 //       type: 'UPDATE_LIST_RESULTS',
 //       items: json
 //     });
+//     // dispatch(updateProductlist);
 //   }
 
 
@@ -341,7 +354,7 @@ export default ProductsOverviewScreen;
 //     const newItems = fetchResults(totalItems);
 
 //     // mimic server-side API request and delay execution for 1 second
-//     await delay(1000);
+//     await delay(100);
 
 //     if (newItems.length === 0) {
 //       // if no new items were fetched, set all loaded to true to prevent further requests
@@ -355,7 +368,14 @@ export default ProductsOverviewScreen;
 //     setLoadingMore(false);
 //   }
 
-//       if (error) {
+
+//   const dispatch = useDispatch();
+//   const products = useSelector((state) => state.Data.items);
+//   const totalItems = Array.isArray(products) ? products.length : 0;
+//   // console.log(products);
+  
+
+//     if (error) {
 //     return (
 //       <View style={styles.centered}>
 //         <Text>An error occurred!</Text>
@@ -376,23 +396,64 @@ export default ProductsOverviewScreen;
 //     );
 //   }
 
-//   // if (!loading && listItems.length === 0) {
-//   //   return (
-//   //     <View style={styles.centered}>
-//   //       <Text>No products found. Maybe start adding some!</Text>
-//   //     </View>
-//   //   );
-//   // }
+//   if (!loading && totalItems.length === 0) {
+//     return (
+//       <View style={styles.centered}>
+//         <Text>No products found. please swipe down for refresh </Text>
+//       </View>
+//     );
+//   }
 
-//    const selectItemHandler = (product_id, product_title_eng) => {
+//   const searchProductHandler = (text) => {
+//     console.log(text);
+//     dispatch(searchProduct(text));
+//   };
+
+//   props.navigation.setOptions({
+//     headerRight: () => (
+//       <View style={{ flexDirection: "row" }}>
+//         <View
+//           style={{
+//             width: 270,
+//             height: 35,
+//             borderColor: "white",
+//             borderRadius: 15,
+//             borderWidth: 1,
+//             backgroundColor: "white",
+//           }}
+//         >
+//           <TextInput 
+//           onChangeText={(text) => searchProductHandler(text)}
+//           placeholder="Search..." style={{ padding: 5 }} />
+//         </View>
+
+//         <HeaderButtons HeaderButtonComponent={HeaderButton}>
+//           <Item
+//             title="search"
+//             iconName="ios-search"
+//             onPress={() => {
+//               // navData.navigation.toggleDrawer();
+//             }}
+//           />
+//         </HeaderButtons>
+//       </View>
+//     ),
+//   });
+
+//    const selectItemHandler = (item, product_title_eng) => {
 //     props.navigation.navigate("ProductDetail", {
-//       productId: product_id,
-//       productTitle: product_title_eng,
+//       item: item,
+//       title: product_title_eng
 //     });
 //   };
 
+  
+
+ 
+
 //   return (
-//     <SafeAreaView style={{ flex: 1 }}>
+//      <View style={styles.main}>
+//        <Banner />
 //       <FlatList
 //         contentContainerStyle={styles.list}
 //         // ListHeaderComponent={
@@ -412,52 +473,54 @@ export default ProductsOverviewScreen;
 //           loadMoreResults(info);
 //         }}
 //         onEndReachedThreshold={0.01}
-//         data={listItems}
+//         data={products}
 //         keyExtractor={(item) => item.product_id}
 //         numColumns={2}
-//         renderItem={(itemData) => (
+//         renderItem={({item}) => (
 //         <ProductItem
-//           id={itemData.item.product_id}
-//           product={itemData.item}
-//           image={IMAGE_URL + itemData.item.type_id+'/'+ itemData.item.app_pic1}
-//           title={itemData.item.product_title_eng}
-//           price={itemData.item.sale_price}
+//           id={item.product_id}
+//           product={item}
+//           image={IMAGE_URL + item.type_id+'/'+ item.app_pic1}
+//           title={item.product_title_eng}
+//           price={item.sale_price}
 //           onSelect={() => {
-//             selectItemHandler(itemData.item.product_id, itemData.item.product_title_eng);
+//             selectItemHandler(item, item.product_title_eng);
 //           }}
 //         />
 //       )}
 //       />
-//     </SafeAreaView>
+        
+//         <View style={styles.screen}>
+//         <CartButton onPress={() => setIsAddMode(true)} />
+//         <PopUpModal
+//           visible={isAddMode}
+//           onCancel={cancelModal}
+//           onSelect={() => { props.navigation.navigate("Cart");
+//               cancelModal()}}/>
+//         </View> 
+//     </View>
 //   );
-// }
+// };
 
-// export const styles = StyleSheet.create({
-//   header: {
-//     paddingHorizontal: 10,
-//     paddingVertical: 20,
-//   },
-//   title: {
-//     fontSize: 26,
-//     fontWeight: '600',
-//   },
-//   list: {
+// export const screenOptions = (navData) => {
+//   return {
+//     // headerTitle: "Popular Item",
+//     headerLeft: () => (
+//       <HeaderButtons HeaderButtonComponent={HeaderButton}>
+//         <Item
+//           title="Menu"
+//           iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+//           onPress={() => {
+//             navData.navigation.toggleDrawer();
+//           }}
+//         />
+//       </HeaderButtons>
+//     ),
+//   };
+// };
 
-//   },
-//   item: {
-//     paddingHorizontal: 15,
-//     paddingVertical: 15,
-//     borderBottomWidth: 1,
-//     borderColor: '#ccc',
-//     width: '100%',
-//   },
-//   footer: {
-//     padding: 15,
-//   },
-//   footerText: {
-//     fontWeight: '600',
-//   },
-//     main: {
+// const styles = StyleSheet.create({
+//   main: {
 //     flex: 1,
 //   },
 //   centered: {
@@ -474,11 +537,5 @@ export default ProductsOverviewScreen;
 //   },
 // });
 
-
-
-
-
-
-
-
+// export default ProductsOverviewScreen;
 
