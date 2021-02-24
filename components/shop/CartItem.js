@@ -10,23 +10,24 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import Card from "../UI/Card";
+import {IMAGE_URL} from "../../BaseUrl";
 
-const CartItem = (props) => {
+const CartItem = ({data, onDecrease, onIncrease, onDelete}) => {
   return (
     <Card style={styles.productMain}>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{ uri: props.image }} />
+        <Image style={styles.image} source={{ uri: IMAGE_URL + data.type_id+'/'+data.web_pic1 }} />
       </View>
       <View style={styles.detailContainer}>
         <View style={{ overFlow: "hidden" }}>
           <Text numberOfLines={1} style={styles.text}>
-            {props.title}
+            {data.product_title_eng}
           </Text>
         </View>
-        <Text style={styles.text}>৳{props.amount}</Text>
+        <Text style={styles.text}>৳{(data.quantity * data.sale_price).toFixed(2)}</Text>
 
         <View style={styles.action}>
-          <TouchableOpacity onPress={props.onDecrease}>
+          <TouchableOpacity onPress={onDecrease}>
             <Ionicons
               name={
                 Platform.OS === "android"
@@ -38,8 +39,8 @@ const CartItem = (props) => {
             />
           </TouchableOpacity>
 
-          <Text style={styles.quantity}>{props.quantity} </Text>
-          <TouchableOpacity onPress={props.onIncrease}>
+          <Text style={styles.quantity}>{data.quantity} </Text>
+          <TouchableOpacity onPress={onIncrease}>
             <Ionicons
               name={
                 Platform.OS === "android" ? "md-add-circle" : "ios-add-circle"
@@ -48,7 +49,7 @@ const CartItem = (props) => {
               color={Colors.primary}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={props.onDelete} style={styles.touchable}>
+          <TouchableOpacity onPress={onDelete} style={styles.touchable}>
             <Ionicons
               name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
               size={30}

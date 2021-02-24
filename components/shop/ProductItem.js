@@ -3,31 +3,20 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   Image,
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform,
 } from "react-native";
-
-import { useSelector, useDispatch } from "react-redux";
+import { useCart } from '../../contexts/cart/use-cart';
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import Card from "../UI/Card";
 
-import { addToCart } from "../../store/actions/cart";
-import { decrease } from "../../store/actions/cart";
-import { increase } from "../../store/actions/cart";
-
 const ProductItem = (props) => {
-  const cartItem = useSelector((state) => state.cart.items);
-
-  let quantity = 0;
-  if (cartItem[props.id]) {
-      quantity = cartItem[props.id].quantity;
-    }
-
-    const dispatch = useDispatch();
+  // console.log(props);
+  const { addItem, removeItem, getItem, isInCart } = useCart();
+  
 
   let TouchableComp = TouchableOpacity;
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -52,9 +41,9 @@ const ProductItem = (props) => {
 
             <View style={styles.action}>
               <Text style={styles.price}>৳{props.price}</Text>
-              {quantity === 0 ? (
+              {!isInCart(props.id) ? (
                 <TouchableOpacity onPress={() => {
-                     dispatch(addToCart(props.product))}}>
+                     addItem(props.product)}}>
                   <Ionicons
                       name={
                         Platform.OS === "android"
@@ -67,8 +56,8 @@ const ProductItem = (props) => {
                 </TouchableOpacity>
               ) : (
                 <View style={styles.background}>
-                    <TouchableOpacity onPress={() => {
-                      dispatch(decrease(props.product.product_id));
+                    <TouchableOpacity onPress={() => { 
+                      removeItem(props.product);
                      }}>
                     <Ionicons
                       name={Platform.OS === "android"
@@ -78,9 +67,9 @@ const ProductItem = (props) => {
                       color={Colors.white}
                     />
                   </TouchableOpacity>
-                  <Text style={styles.quantity}> {quantity} </Text>
+                  <Text style={styles.quantity}> {getItem(props.id).quantity} </Text>
                   <TouchableOpacity onPress={() => {
-                      dispatch(increase(props.product.product_id));
+                       addItem(props.product);
                      }}>
                     <Ionicons
                       name={

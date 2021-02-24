@@ -9,7 +9,6 @@ import {
   TextInput,
   ActivityIndicator
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
 import ProductItem from "../../components/shop/ProductItem";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
@@ -18,12 +17,14 @@ import Colors from "../../constants/Colors";
 import PopUpModal from "../../components/shop/PopUpModal"
 import CartButton from "../../components/shop/CartButton";
 import Banner from "../../components/UI/Banner";
-import { saveProduct } from "../../store/actions/Data";
-import { saveCategory } from "../../store/actions/Data";
-import { searchProduct  } from "../../store/actions/Data";
+import { useAppState, useAppDispatch } from "../../contexts/app/app.provider";
 
 
 const ProductsOverviewScreen = (props) => {
+  const [data, setData ] = useState([]);
+  const products = useAppState("showProductInfo");
+  
+  // console.log(products);
   const [sidebarItem, setSidebar] = useState([]);
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -39,17 +40,31 @@ const ProductsOverviewScreen = (props) => {
     axios.get(baseURL)
       .then((res) => {
         setSidebar(res.data.menu_item);
-        dispatch(saveCategory(res.data.menu_item));
-        dispatch(saveProduct(res.data.allProductInfo));
-        // console.log(res.data.menu_item);
+        setData(res.data);
+        // setSlider(res.data.desktopSliderInfo);
+        dispatch({ type: 'SAVE_PRODUCT_INFO', payload: res.data.allProductInfo });
+        dispatch({ type: 'SAVE_SIDEBAR_DATA', payload: res.data.menu_item });
         setLoading(false);
         setLoadData(false);
       })
       .catch((error) => {
         console.log('Api call error');
         setError(true)
-      })
+      });
+
+      return () => {
+         dispatch();
+          setData([]);
+          setSidebar([]);
+        };
   }, []);
+
+  const selectItemHandler = (item, product_title_eng) => {
+    props.navigation.navigate("ProductDetail", {
+      item: item,
+      title: product_title_eng
+    });
+  };
 
    const renderItem = ({ item }) => (
         <ProductItem
@@ -65,8 +80,7 @@ const ProductsOverviewScreen = (props) => {
     );
   
   const memoizedValue = useMemo(() => renderItem, [products]);
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.Data.saveProduct);
+  const dispatch = useAppDispatch();
    
 
     if (error) {
@@ -98,10 +112,19 @@ const ProductsOverviewScreen = (props) => {
     );
   }
 
-  const searchProductHandler = (text) => {
-    console.log(text);
-    dispatch(searchProduct(text));
+  // const searchProductHandler = (text) => {
+  //   console.log(text);
+  //   dispatch(searchProduct(text));
+  // };
+
+
+   let myVar = 0;
+  const handleOnChange = (text) => {
+    if (myVar) clearTimeout(myVar);
+     myVar = setTimeout(function(){ dispatch({ type: 'SET_SEARCH_TERM', payload: text }); }, 1000);
+    
   };
+
 
   props.navigation.setOptions({
     headerRight: () => (
@@ -117,7 +140,7 @@ const ProductsOverviewScreen = (props) => {
           }}
         >
           <TextInput 
-          onChangeText={(text) => searchProductHandler(text)}
+          onChangeText={(text) => handleOnChange(text)}
           placeholder="Search..." style={{ padding: 5 }} />
         </View>
 
@@ -134,12 +157,7 @@ const ProductsOverviewScreen = (props) => {
     ),
   });
 
- const selectItemHandler = (item, product_title_eng) => {
-    props.navigation.navigate("ProductDetail", {
-      item: item,
-      title: product_title_eng
-    });
-  };
+ 
 
   
 
@@ -204,7 +222,6 @@ const styles = StyleSheet.create({
 });
 
 export default ProductsOverviewScreen;
-
 
 
 
@@ -538,4 +555,8 @@ export default ProductsOverviewScreen;
 // });
 
 // export default ProductsOverviewScreen;
+
+
+
+
 

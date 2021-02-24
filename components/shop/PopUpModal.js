@@ -1,37 +1,21 @@
 import React from "react";
-import { View, Text, FlatList, Button, Modal, TouchableOpacity, StyleSheet } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { View, Text, FlatList, Modal, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
 import Colors from "../../constants/Colors";
 import CartItem from "./CartItem";
-import { decrease } from "../../store/actions/cart";
-import { increase } from "../../store/actions/cart";
-import { addOrder } from "../../store/actions/orders";
-import { removeFromCart } from "../../store/actions/cart";
-import Card from "../UI/Card"
+import Card from "../UI/Card";
+import { useCart } from '../../contexts/cart/use-cart';
 
 const PopUpModal = (props) => {
-  const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
-  const cartItems = useSelector((state) => {
-    const transformedCartItems = [];
-    for (const key in state.cart.items) {
-      transformedCartItems.push({
-        productId: key,
-        productTitle: state.cart.items[key].productTitle,
-        productPrice: state.cart.items[key].productPrice,
-        productImage: state.cart.items[key].productImage,
-        quantity: state.cart.items[key].quantity,
-        sum: state.cart.items[key].sum,
-      });
-    }
-    return transformedCartItems.sort((a, b) =>
-      a.productId > b.productId ? 1 : -1
-    );
-  });
-  const dispatch = useDispatch();
-
-  
+  const {
+    items,
+    coupon,
+    addItem,
+    removeItem,
+    removeItemFromCart,
+    cartItemsCount,
+    calculatePrice,
+  } = useCart();
 
   // const submitOrder = () => {
   //   props.onNavigate
@@ -54,41 +38,37 @@ const PopUpModal = (props) => {
             />
           </View>
             <View style={styles.screen}>
-              {cartItems.length === 0 ? (
+              {items.length === 0 ? (
                 <View style={styles.center}>
                   <Text>No Item in Cart</Text>
                 </View>
               ) : (
                 <FlatList
-                  data={cartItems}
-                  keyExtractor={(item) => item.productId}
+                  data={items}
+                  keyExtractor={(item) => item.product_id}
                   renderItem={(itemData) => (
                     <CartItem
-                      quantity={itemData.item.quantity}
-                      title={itemData.item.productTitle}
-                      image={itemData.item.productImage}
-                      amount={itemData.item.sum}
-                      onDecrease={() => {
-                        dispatch(decrease(itemData.item.productId));
-                      }}
-                      onIncrease={() => {
-                        dispatch(increase(itemData.item.productId));
-                      }}
-                      onDelete={() => {
-                        dispatch(removeFromCart(itemData.item.productId));
-                      }}
+              key={itemData.item.product_id}
+              quantity={itemData.item.quantity}
+              title={itemData.item.productTitle}
+              image={itemData.item.productImage}
+              amount={itemData.item.sum}
+              data={itemData.item}
+              onDecrease={() => removeItem(itemData.item)}
+              onIncrease={() => addItem(itemData.item)}
+              onDelete={() => removeItemFromCart(itemData.item)}
                     />
                   )}
                 />
               )}
-                {cartItems.length > 0  &&(
+                {items.length > 0  &&(
                   <TouchableOpacity 
                       onPress={props.onSelect}>
                     <Card style={styles.Container}>
                       <Text style={styles.placeOrder}>Checkout</Text>
                       <View>
                         <Text style={styles.amount}>
-                          ৳{Math.round(cartTotalAmount)}
+                          ৳ {calculatePrice()}
                         </Text>
                       </View>
                     </Card>

@@ -1,14 +1,13 @@
-import React, {useState} from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { View,Text, StyleSheet,ScrollView, TouchableOpacity,Image } from 'react-native';
 import Colors from "../../constants/Colors";
-import { subMenuProduct } from "../../store/actions/Data";
+import { useAppDispatch } from "../../contexts/app/app.provider";
 
 const CategoryScreen = ({subMenu }) => {
-  const dispatch = useDispatch(); 
+  const dispatch = useAppDispatch(); 
   const onCategoryClick = (id) => {
-      dispatch(subMenuProduct(id));
-    console.log(id);  
+      dispatch({ type: 'SUBTYPE_PRODUCT_INFO', payload: id });
+    // console.log(id);  
   };
   return (
       <ScrollView

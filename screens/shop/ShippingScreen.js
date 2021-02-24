@@ -1,30 +1,15 @@
-import React, { useEffect, useState} from 'react'
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState} from 'react';
 import { Text, TouchableOpacity ,StyleSheet} from 'react-native'
 import FormContainer from '../../components/UI/FormContainer'
 import Input from '../../components/UI/Input';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Card from "../../components/UI/Card"
-import Colors from "../../constants/Colors"
+import Colors from "../../constants/Colors";
+import { useCart } from '../../contexts/cart/use-cart';
 
 const Checkout = (props) => {
-    const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
-  const cartItems = useSelector((state) => {
-    const transformedCartItems = [];
-    for (const key in state.cart.items) {
-      transformedCartItems.push({
-        productId: key,
-        productTitle: state.cart.items[key].productTitle,
-        productPrice: state.cart.items[key].productPrice,
-        productImage: state.cart.items[key].productImage,
-        quantity: state.cart.items[key].quantity,
-        sum: state.cart.items[key].sum,
-      });
-    }
-    return transformedCartItems.sort((a, b) =>
-      a.productId > b.productId ? 1 : -1
-    );
-  });
+  const { cartItemsCount, calculatePrice } = useCart();
+
     const [ totalOrder, setTotalorder ] = useState();
     const [ orderItems, setOrderItems ] = useState();
     const [ address, setAddress ] = useState();
@@ -34,8 +19,8 @@ const Checkout = (props) => {
     const [ phone, setPhone ] = useState();
 
     useEffect(() => {
-        setOrderItems(cartItems)
-        setTotalorder(cartTotalAmount)
+        setOrderItems(cartItemsCount)
+        setTotalorder(calculatePrice())
         return () => {
             setOrderItems();
             setTotalorder();

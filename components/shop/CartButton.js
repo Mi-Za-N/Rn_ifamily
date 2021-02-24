@@ -1,41 +1,23 @@
 import React from 'react';
-import { useSelector, useDispatch } from "react-redux";
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Colors  from '../../constants/Colors';
-import Card from "../../components/UI/Card"
+import Card from "../../components/UI/Card";
+import { useCart } from '../../contexts/cart/use-cart';
 
 const CartButtonScreen = (props) => {
-    const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
-
-    const cartItems = useSelector((state) => {
-    const transformedCartItems = [];
-    for (const key in state.cart.items) {
-      transformedCartItems.push({
-        productId: key,
-        productTitle: state.cart.items[key].productTitle,
-        productPrice: state.cart.items[key].productPrice,
-        quantity: state.cart.items[key].quantity,
-        sum: state.cart.items[key].sum,
-      });
-    }
-    return transformedCartItems.sort((a, b) =>
-      a.productId > b.productId ? 1 : -1
-    );
-  });
-
-   
-
+const { cartItemsCount, calculatePrice } = useCart();
+ 
   return (
      <TouchableOpacity 
          onPress={props.onPress}>
       <Card style={styles.Container}>
         <View>
-          <Text style={styles.cartItems}>Items: {cartItems.length}</Text>
+          <Text style={styles.cartItems}>Items: {cartItemsCount}</Text>
         </View>
         <Text style={styles.placeOrder}>Order Now</Text>
         <View>
          <Text style={styles.amount}>
-            ৳{Math.round(cartTotalAmount)}
+            ৳{calculatePrice()}
           </Text>
         </View>
       </Card>

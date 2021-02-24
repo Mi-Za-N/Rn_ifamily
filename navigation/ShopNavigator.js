@@ -26,10 +26,11 @@ import OrdersScreen, {
 import CategoryProdScreen, {
   screenOptions as CategoryProdScreenOptions,
 } from "../screens/shop/CategoryProdScreen";
-import {baseURL, IMAGE_URL} from "../BaseUrl";
+import {IMAGE_URL} from "../BaseUrl";
 
 import Colors from "../constants/Colors";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppState } from "../contexts/app/app.provider";
+
 
 
 
@@ -100,7 +101,7 @@ export const OrdersNavigator = () => {
 const ShopDrawerNavigator = createDrawerNavigator();
 
 export const ShopNavigator = () => {
-const categories = useSelector((state) => state.Data.saveCategory);
+const categories = useAppState("sidebarData");
   return (
     <NavigationContainer>
       <ShopDrawerNavigator.Navigator

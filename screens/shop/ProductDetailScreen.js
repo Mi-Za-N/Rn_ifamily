@@ -7,27 +7,15 @@ import {
   Button,
   StyleSheet,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
 import { IMAGE_URL} from "../../BaseUrl";
 import Colors from "../../constants/Colors";
-import { addToCart } from "../../store/actions/cart";
+import { useCart } from '../../contexts/cart/use-cart';
 
 const ProductDetailScreen = (props) => {
+  const { addItem, removeItem, getItem, isInCart } = useCart();
   const product= props.route.params.item;
-  const title= props.route.params.title;
-  
 
-
-  const cartItem = useSelector((state) => state.cart.items);
-  let quantity = 0;
-  for (const key in cartItem) {
-    key;
-    if (key === product.product_id) {
-      quantity = cartItem[key].quantity;
-    }
-  }
-
-  const dispatch = useDispatch();
+ 
 
   return (
     <ScrollView>
@@ -52,11 +40,11 @@ const ProductDetailScreen = (props) => {
               color: "white",
               fontSize: 16,
           }}
-            disabled={quantity > 0}
+            // disabled={quantity > 0}
             color={Colors.primary}
             title="Add to Cart"
             onPress={() => {
-              dispatch(addToCart(product));
+              addItem(product)
             }}
           />
         </View>

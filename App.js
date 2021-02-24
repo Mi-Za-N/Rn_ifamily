@@ -1,29 +1,10 @@
 import React, { useState } from "react";
-import { createStore, combineReducers, compose, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
-import { Provider } from "react-redux";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
-import { productListReducer } from "./store/reducers/products";
-import cartReducer from "./store/reducers/cart";
-import ordersReducer from "./store/reducers/orders";
-import Data from "./store/reducers/Data";
+import { AppProvider } from './contexts/app/app.provider';
+import { CartProvider } from './contexts/cart/use-cart';
 import ShopNavigator from "./navigation/ShopNavigator";
-
-const initialState = {};
-const reducer = combineReducers({
-  productList: productListReducer,
-  cart: cartReducer,
-  orders: ordersReducer,
-  Data: Data,
-});
-const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(
-  reducer,
-  initialState,
-  composeEnhancer(applyMiddleware(thunk))
-);
-
+// import { StatusBar } from 'expo-status-bar';
 const fetchFonts = () => {
   return Font.loadAsync({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
@@ -46,9 +27,12 @@ export default function App() {
   }
 
   return (
-    <Provider store={store}>
-       <ShopNavigator />
-    </Provider>
+      <AppProvider>
+        <CartProvider>
+        {/* <StatusBar style="auto" /> */}
+        <ShopNavigator />
+        </CartProvider>
+      </AppProvider>
   );
 }
 

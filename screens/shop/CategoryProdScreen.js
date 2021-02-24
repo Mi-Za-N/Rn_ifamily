@@ -1,13 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { FlatList, View,StyleSheet, } from 'react-native';
-import { useSelector} from 'react-redux';
 import { IMAGE_URL} from "../../BaseUrl";
 import ProductItem from "../../components/shop/ProductItem";
 import Category from "./CategoryScreen";
 import PopUpModal from "../../components/shop/PopUpModal"
 import CartButton from "../../components/shop/CartButton";
+import { useAppState } from "../../contexts/app/app.provider";
 
 export default function App (props) {
+   const products = useAppState("showProductInfo");
     const typeId = props.route.params.id;
     const subMenu = props.route.params.subMenu;
     const [isAddMode, setIsAddMode] = useState(false);
@@ -15,7 +16,10 @@ export default function App (props) {
       setIsAddMode(false);
     };
 
-     
+    const filter = products.filter((product) => {
+            return product.type_id === typeId;
+          });
+    //  console.log(filter);
         
 
    const renderItem = ({ item }) => (
@@ -31,12 +35,9 @@ export default function App (props) {
         />
     );
 
-  const memoizedValue = useMemo(() => renderItem, [products]);
+  const memoizedValue = useMemo(() => renderItem, [filter]);
   // const products = useSelector((state) => state.Data.saveProduct);
-  const products = useSelector((state) =>
-          state.Data.saveProduct.filter((product) => {
-            return product.type_id === typeId;
-          }));
+  
 
 
 
@@ -52,7 +53,7 @@ export default function App (props) {
      <Category subMenu={subMenu} />
       <FlatList
       style={{ marginTop: 5 }}
-      data={products}
+      data={filter}
       keyExtractor={item => item.product_id}
       numColumns={2}
       renderItem={memoizedValue}

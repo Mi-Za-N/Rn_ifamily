@@ -1,17 +1,27 @@
 import React from 'react'
 import { View,Text, StyleSheet,TouchableOpacity,Image, Dimensions, ScrollView } from 'react-native';
 import  Colors  from '../../constants/Colors';
-import { useDispatch } from "react-redux";
-import { addOrder } from "../../store/actions/orders";
-import Card from "../../components/UI/Card"
+import Card from "../../components/UI/Card";
+import { useCart } from '../../contexts/cart/use-cart';
 
 var { width, height } = Dimensions.get('window')
 
 const Confirm = (props) => {
+  const {
+    items,
+    removeCoupon,
+    coupon,
+    clearCart,
+    cartItemsCount,
+    calculatePrice,
+    calculateDiscount,
+    calculateSubTotalPrice,
+    isRestaurant,
+    toggleRestaurant,
+  } = useCart();
     const finalOrder = props.route.params;
-    const dispatch = useDispatch();
     const confirmOrder = () => {
-        dispatch(addOrder(finalOrder));
+        clearCart();
         props.navigation.navigate("ProductsOverview");
     }
 
@@ -21,7 +31,7 @@ const Confirm = (props) => {
                 <Text style={{ fontSize: 20, fontWeight: 'bold'}}>
                     Confirm Order
                 </Text>
-                {props.route.params ? 
+                {/* {props.route.params ? 
                 <View style={styles.border}>
                     <Text style={styles.title}>Shipping to:</Text>
                     <View style={styles.shipping}>
@@ -46,7 +56,7 @@ const Confirm = (props) => {
                         )
                     })}
                 </View>    
-           : null }
+           : null } */}
            <TouchableOpacity onPress={confirmOrder}>
                 <Card style={styles.Container}>
                   <Text style={styles.placeOrder}>Confirm Order</Text>
