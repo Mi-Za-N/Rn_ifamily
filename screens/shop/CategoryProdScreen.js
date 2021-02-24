@@ -9,16 +9,16 @@ import { useAppState } from "../../contexts/app/app.provider";
 
 export default function App (props) {
    const products = useAppState("showProductInfo");
-    const typeId = props.route.params.id;
-    const subMenu = props.route.params.subMenu;
-    const [isAddMode, setIsAddMode] = useState(false);
-    const cancelModal = () => {
-      setIsAddMode(false);
+   const subMenu = props.route.params.subMenu;
+   const [isAddMode, setIsAddMode] = useState(false);
+   const cancelModal = () => {
+     setIsAddMode(false);
     };
-
-    const filter = products.filter((product) => {
-            return product.type_id === typeId;
-          });
+    
+    // const typeId = props.route.params.id;
+    // const filter = products.filter((product) => {
+    //         return product.type_id === typeId;
+    //       });
     //  console.log(filter);
         
 
@@ -35,8 +35,7 @@ export default function App (props) {
         />
     );
 
-  const memoizedValue = useMemo(() => renderItem, [filter]);
-  // const products = useSelector((state) => state.Data.saveProduct);
+  const memoizedValue = useMemo(() => renderItem, [products]);
   
 
 
@@ -53,7 +52,7 @@ export default function App (props) {
      <Category subMenu={subMenu} />
       <FlatList
       style={{ marginTop: 5 }}
-      data={filter}
+      data={products}
       keyExtractor={item => item.product_id}
       numColumns={2}
       renderItem={memoizedValue}
@@ -63,7 +62,7 @@ export default function App (props) {
         <PopUpModal
           visible={isAddMode}
           onCancel={cancelModal}
-          onSelect={() => { props.navigation.navigate("Cart");
+          onSelect={() => { props.navigation.navigate("otp");
               cancelModal()}}/>
         </View>
     </View>

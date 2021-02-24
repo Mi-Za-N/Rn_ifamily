@@ -7,6 +7,7 @@ import {
 } from "@react-navigation/drawer";
 import { Platform, SafeAreaView,Text, ScrollView,StyleSheet, TouchableOpacity,Image, Button, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useAppDispatch } from "../contexts/app/app.provider";
 
 import ProductsOverviewScreen, {
   screenOptions as productsOverviewScreenOptions,
@@ -26,6 +27,10 @@ import OrdersScreen, {
 import CategoryProdScreen, {
   screenOptions as CategoryProdScreenOptions,
 } from "../screens/shop/CategoryProdScreen";
+import InputOtpScreen, {
+  screenOptions as InputOtpScreenOptions,
+} from "../screens/shop/InputOtpScreen";
+
 import {IMAGE_URL} from "../BaseUrl";
 
 import Colors from "../constants/Colors";
@@ -78,6 +83,11 @@ export const ProductsNavigator = () => {
         component={CategoryProdScreen}
         options={CategoryProdScreenOptions}
       />
+      <ProductsStackNavigator.Screen
+        name="otp"
+        component={InputOtpScreen}
+        options={InputOtpScreenOptions}
+      />
       
     </ProductsStackNavigator.Navigator>
   );
@@ -102,6 +112,7 @@ const ShopDrawerNavigator = createDrawerNavigator();
 
 export const ShopNavigator = () => {
 const categories = useAppState("sidebarData");
+ const dispatch = useAppDispatch(); 
   return (
     <NavigationContainer>
       <ShopDrawerNavigator.Navigator
@@ -119,6 +130,7 @@ const categories = useAppState("sidebarData");
                         key={category.type_id}
                         activeOpacity={0.8}
                         onPress={() => {
+                          dispatch({ type: 'SAME_TYPE_PRODUCT_INFO', payload: category.type_id });
                           props.navigation.navigate("CatPod", {
                             id: category.type_id,
                             title: category.product_type,

@@ -5,43 +5,90 @@ import Input from '../../components/UI/Input';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Card from "../../components/UI/Card"
 import Colors from "../../constants/Colors";
-import { useCart } from '../../contexts/cart/use-cart';
+import { useNetInfo} from "@react-native-community/netinfo";
+import { REGISTER_CUSTOMER_URL, API_KEY } from "../../BaseUrl";
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Checkout = (props) => {
-  const { cartItemsCount, calculatePrice } = useCart();
-
-    const [ totalOrder, setTotalorder ] = useState();
-    const [ orderItems, setOrderItems ] = useState();
+    const netInfo = useNetInfo();
+    const [ name, setName ] = useState();
     const [ address, setAddress ] = useState();
-    const [ address2, setAddress2 ] = useState();
     const [ city, setCity ] = useState();
-    const [ zip, setZip ] = useState();
-    const [ phone, setPhone ] = useState();
+    const [ otp, setOpt ] = useState();
+    const [tempOTP, setTempOTP] = useState('');
 
-    useEffect(() => {
-        setOrderItems(cartItemsCount)
-        setTotalorder(calculatePrice())
-        return () => {
-            setOrderItems();
-            setTotalorder();
-        }
-    }, [])
-
-    const checkOut = () => {
-        let order = {
-            city,
-            dateOrdered: Date.now(),
-            orderItems,
-            totalOrder,
-            phone,
-            shippingAddress1: address,
-            shippingAddress2: address2,
-            status: "3",
-            zip,
-        }
-
-        props.navigation.navigate("Confirm", {order: order })
+    const changeInput = (text) => {
+    if (text === "name") {
+      setName(text);
     }
+    if (text === "addr") {
+      setAddress(text);
+    }
+    if (text === "city") {
+      setCity(text);
+    }
+    if (text === "otp") {
+      setOpt(text);
+    }
+  };
+
+  const handleSubmit = () => {
+      props.navigation.navigate("Confirm")
+      if (netInfo.isInternetReachable === true) {
+        fetch(REGISTER_CUSTOMER_URL,
+          {
+            method: 'POST',
+            headers:
+            {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              {
+                name: name,
+                address: address,
+                city: city,
+                accessKey: '8jdfjd88743jhg',
+                deviceKey: API_KEY,
+              })
+          })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            console.log(responseJson);
+            storeData();
+          }).catch((error) => {
+            console.log(error);
+            alert("Hold on! Somethig went worng Try again later", [
+              {
+                text: "OK",
+                onPress: () => null,
+                style: "OK"
+              },
+            ]);
+          });
+      } else {
+        alert("Hold on! Internet Connection Lost", [
+          {
+            text: "OK",
+            onPress: () => null,
+            style: "OK"
+          },
+        ]);
+      }  
+  };
+  const storeData = () => {
+
+    let customerInfo = {
+      name: name,
+      address: address,
+      city: city,
+      //accessKey: this.state.access_key,
+    }
+
+    AsyncStorage.setItem('user', JSON.stringify(customerInfo));
+    dispatch({ type: 'IS_LOGIN', payload: true });
+  }; 
+  
 
     return (
         <KeyboardAwareScrollView
@@ -51,42 +98,32 @@ const Checkout = (props) => {
         >
             <FormContainer title={"Shipping Address"}>
                 <Input
-                    placeholder={"Phone"}
-                    name={"phone"}
-                    value={phone}
-                    keyboardType={"numeric"}
-                    onChangeText={(text) => setPhone(text)}
+                    placeholder={"name"}
+                    name={"name"}
+                    value={name}
+                    onChangeText={changeInput}
                 />
                    <Input
-                    placeholder={"Shipping Address 1"}
-                    name={"ShippingAddress1"}
+                    placeholder={"Shipping Address"}
+                    name={"addr"}
                     value={address}
-                    onChangeText={(text) => setAddress(text)}
-                />
-                   <Input
-                    placeholder={"Shipping Address 2"}
-                    name={"ShippingAddress2"}
-                    value={address2}
-                    onChangeText={(text) => setAddress2(text)}
+                    onChangeText={changeInput}
                 />
                    <Input
                     placeholder={"City"}
                     name={"city"}
                     value={city}
-                    onChangeText={(text) => setCity(text)}
+                    onChangeText={changeInput}
                 />
                    <Input
-                    placeholder={"Zip Code"}
-                    name={"zip"}
-                    value={zip}
+                    placeholder={"Enter OTP"}
+                    name={"otp"}
                     keyboardType={"numeric"}
-                    onChangeText={(text) => setZip(text)}
+                    value={otp}
+                    onChangeText={changeInput}
                 />
-                {/* <View style={{ width: '80%', alignItems: "center" }}>
-                    <Button title="Confirm" onPress={() => checkOut()}/>
-                </View> */}
                 <TouchableOpacity 
-                    onPress={() => checkOut()}>
+                    onPress={handleSubmit}>
                 <Card style={styles.Container}>
                   <Text style={styles.placeOrder}>Place Order</Text>
                 </Card>

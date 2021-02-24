@@ -17,7 +17,7 @@ export const initialState = {
 };
 
 
-export function appReducer(state, action) {
+export function appReducer(state = initialState, action) {
   // console.log(action.payload);
   switch (action.type) {
 

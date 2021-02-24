@@ -179,7 +179,7 @@ const ProductsOverviewScreen = (props) => {
         <PopUpModal
           visible={isAddMode}
           onCancel={cancelModal}
-          onSelect={() => { props.navigation.navigate("Cart");
+          onSelect={() => { props.navigation.navigate("otp");
               cancelModal()}}/>
         </View> 
     </View>
