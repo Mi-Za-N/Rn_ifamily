@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useState,useEffect} from 'react';
 import MainButton from "../../components/shop/MainButton";
-import  Colors  from '../../constants/Colors';
+import { PLACE_ORDER_URL, API_KEY } from "../../BaseUrl";
 import { View, StyleSheet, Dimensions, ScrollView,} from 'react-native'
 import {
     Text,
@@ -12,10 +12,18 @@ import {
 } from 'native-base'
 import {IMAGE_URL} from "../../BaseUrl";
 import { useCart } from '../../contexts/cart/use-cart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNetInfo} from "@react-native-community/netinfo";
+import {useAppState, useAppDispatch } from "../../contexts/app/app.provider";
 
 var { width, height } = Dimensions.get('window')
 
 const Confirm = (props) => {
+    const netInfo = useNetInfo();
+    const dispatch = useAppDispatch();
+    const [subTotal, setSubTotal] = useState(0);
+    const [deliveryCharge, setDeliveryCharge] = useState(0);
+
   const {
     items,
     removeCoupon,
@@ -26,15 +34,69 @@ const Confirm = (props) => {
     calculateDiscount,
     calculateSubTotalPrice,
   } = useCart();
-  console.log(items);
+    // const confirmOrder = () => {
+    //     clearCart();
+    //     props.navigation.navigate("ProductsOverview");
+    // }
 
-    const finalOrder = props.route.params;
-    console.log(finalOrder);
-    const confirmOrder = () => {
-        clearCart();
-        props.navigation.navigate("ProductsOverview");
+    const handlePlaceOrder = async () => {
+    props.navigation.navigate("ProductsOverview");
+    dispatch({ type: 'IS_LOGIN', payload: true });
+    if (netInfo.isInternetReachable === true) {
+      fetch(PLACE_ORDER_URL,
+        {
+          method: 'POST',
+          headers:
+          {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(
+            {
+              cartItem: items,
+              subTotal: subTotal,
+              deliveryCharge: deliveryCharge,
+            //   mobile: mobileNo,
+                 mobile: '',
+                 address: '',
+            //   address: address,
+              accessKey: '8jdfjd88743jhg',
+              deviceKey: API_KEY,
+            })
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          clearCart();
+        }).catch((error) => {
+           console.log(error);
+        });
+
+    } else {
+
+      alert("Hold on! Internet Connection Lost", [
+        {
+          text: "OK",
+          onPress: () => null,
+          style: "OK"
+        },
+      ]);
     }
+   
+  };
 
+
+
+
+//     const getData = async () => {
+//         try {
+//             const jsonValue = await AsyncStorage.getItem('user')
+//             console.log(jsonValue.name);
+//             return jsonValue != null ? JSON.parse(jsonValue) : null;
+
+//         } catch(e) {
+//             console.log(e);
+//         }
+//    }
     
 
   
@@ -81,7 +143,7 @@ const Confirm = (props) => {
         {/* //    : null } */}
             </View>
              {items.length > 0  &&(
-                  <MainButton onPress={confirmOrder}>
+                  <MainButton onPress={handlePlaceOrder}>
                       Confirm Order
                     </MainButton>
                 )}

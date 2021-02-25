@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -27,9 +27,10 @@ import OrdersScreen, {
 import CategoryProdScreen, {
   screenOptions as CategoryProdScreenOptions,
 } from "../screens/shop/CategoryProdScreen";
-import InputOtpScreen, {
+import InputOtpScreen, { 
   screenOptions as InputOtpScreenOptions,
 } from "../screens/shop/InputOtpScreen";
+import AsyncStorage from '@react-native-community/async-storage';
 
 import {IMAGE_URL} from "../BaseUrl";
 
@@ -110,9 +111,14 @@ export const OrdersNavigator = () => {
 
 const ShopDrawerNavigator = createDrawerNavigator();
 
-export const ShopNavigator = () => {
+export const ShopNavigator = (props) => {
+  const dispatch = useAppDispatch();
+  const isLogin = useAppState("isLogin");
+  const handleLogOut = async () => {
+   dispatch({ type: 'IS_LOGIN', payload: false });
+    AsyncStorage.removeItem('user');
+  };
 const categories = useAppState("sidebarData");
- const dispatch = useAppDispatch(); 
   return (
     <NavigationContainer>
       <ShopDrawerNavigator.Navigator
@@ -165,6 +171,9 @@ const categories = useAppState("sidebarData");
                       </TouchableOpacity>
                     ))}
                   </ScrollView>
+                  <Button title={isLogin === false ? "Login" : "Logout"} color={Colors.primary}
+                      onPress={handleLogOut}
+                    />
               </SafeAreaView>
             </View>
           );

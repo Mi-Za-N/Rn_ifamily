@@ -11,23 +11,35 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { useAppDispatch } from "../../contexts/app/app.provider";
 
 const Checkout = (props) => {
+  // const isLogin = useAppState("isLogin");
+  // const [tempOTP, setTempOTP] = useState('');
+  // const [ name, setName ] = useState();
+  // const [ address, setAddress ] = useState();
+  // const [ city, setCity ] = useState();
+  // const [ otp, setOpt ] = useState();
+  // const netInfo = useNetInfo();
+  // const [mobileNo, setMobileNo] = useState();
+  // const dispatch = useAppDispatch();
+
+  //  useEffect(() => {
+  //    props.navigation.navigate("Confirm");
+  //   let CustInfo = AsyncStorage.getItem('user');
+  //   if (CustInfo !== null) {
+  //     setName(CustInfo.name);
+  //     setAddress(CustInfo.address);
+  //     setMobileNo(CustInfo.mobile);
+  //     // dispatch({ type: 'IS_LOGIN', payload: true });
+  //   }
+  // }, []);
+
+
     const netInfo = useNetInfo();
     const [ name, setName ] = useState();
     const [ address, setAddress ] = useState();
     const [ city, setCity ] = useState();
     const [ otp, setOpt ] = useState();
-
-    // _retrieveData = async () => {
-    //   try {
-    //     const value = await AsyncStorage.getItem('customerInfo');
-    //     if (value !== null) {
-    //       // We have data!!
-    //       console.log(value);
-    //     }
-    //   } catch (error) {
-    //     // Error retrieving data
-    //   }
-    // };
+    const [tempOTP, setTempOTP] = useState('');
+    const [mobileNo, setMobileNo] = useState();
 
     const dispatch = useAppDispatch();
     useEffect(() => {
@@ -56,71 +68,72 @@ const Checkout = (props) => {
     }
   };
 
-  const handleSubmit = () => {
-    props.navigation.navigate("Confirm");
-
-      // if (netInfo.isInternetReachable === true) {
-      //   fetch(REGISTER_CUSTOMER_URL,
-      //     {
-      //       method: 'POST',
-      //       headers:
-      //       {
-      //         'Accept': 'application/json',
-      //         'Content-Type': 'application/json',
-      //       },
-      //       body: JSON.stringify(
-      //         {
-      //           name: name,
-      //           address: address,
-      //           city: city,
-      //           accessKey: '8jdfjd88743jhg',
-      //           deviceKey: API_KEY,
-      //         })
-      //     })
-      //     .then((response) => response.json())
-      //     .then((responseJson) => {
-      //       console.log(responseJson);
-      //       storeData();
-      //     }).catch((error) => {
-      //       console.log(error);
-      //       alert("Hold on! Somethig went worng Try again later", [
-      //         {
-      //           text: "OK",
-      //           onPress: () => null,
-      //           style: "OK"
-      //         },
-      //       ]);
-      //     });
-      // } else {
-      //   alert("Hold on! Internet Connection Lost", [
-      //     {
-      //       text: "OK",
-      //       onPress: () => null,
-      //       style: "OK"
-      //     },
-      //   ]);
-      // }  
+    const handleSubmit = () => {
+    if (otp == tempOTP) {
+      if (netInfo.isInternetReachable === true) {
+        fetch(REGISTER_CUSTOMER_URL,
+          {
+            method: 'POST',
+            headers:
+            {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              {
+                name: name,
+                address: address,
+                mobile: mobileNo,
+                accessKey: '8jdfjd88743jhg',
+                deviceKey: API_KEY,
+              })
+          })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            console.log(responseJson);
+            storeData();
+          }).catch((error) => {
+            console.log(error);
+            alert("Hold on! Somethig went worng Try again later", [
+              {
+                text: "OK",
+                onPress: () => null,
+                style: "OK"
+              },
+            ]);
+          });
+      } else {
+        alert("Hold on! Internet Connection Lost", [
+          {
+            text: "OK",
+            onPress: () => null,
+            style: "OK"
+          },
+        ]);
+      }
+    } else {
+      alert("Hold on! Please Enter Valid OTP", [
+        {
+          text: "OK",
+          onPress: () => null,
+          style: "OK"
+        },
+      ]);
+    }
   };
-  // const storeData = () => {  
+
+  const storeData = () => {
 
     let customerInfo = {
       name: name,
       address: address,
-      city: city,
+      mobile: mobileNo,
       //accessKey: this.state.access_key,
     }
 
-  //   AsyncStorage.setItem('user', JSON.stringify(customerInfo));
-  //   dispatch({ type: 'IS_LOGIN', payload: true });
-  // }; 
-
-  _storeData = async () => {
-  try {
-    await AsyncStorage.setItem('customerInfo', customerInfo);
-  } catch (error) {
-    // Error saving data
-  }
-};
+    AsyncStorage.setItem('user', customerInfo);
+    dispatch({ type: 'IS_LOGIN', payload: true });
+  };
   
 
     return (

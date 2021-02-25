@@ -1,4 +1,4 @@
-export const baseURL = 'https://www.carryfresh.com.bd/api/getWebsiteInfo';
+export const baseURL = 'https://www.ifamilymart.com.bd/api/getWebsiteInfo';
 export const subTypeURL = 'https://www.ifamilymart.com.bd/api/subCategoryProduct/';
 export const SEND_OTP_URL = 'https://www.ifamilymart.com.bd/api/sendSms/';
 export const REGISTER_CUSTOMER_URL = 'https://www.ifamilymart.com.bd/api/registerCustomer/';

@@ -5,26 +5,49 @@ import Card from "../../components/UI/Card";
 import Colors from "../../constants/Colors";
 import Input from '../../components/UI/Input';
 import FormContainer from '../../components/UI/FormContainer';
-import { SEND_OTP_URL, API_KEY } from "../../BaseUrl";
-import { useAppDispatch } from "../../contexts/app/app.provider";
+import { SEND_OTP_URL,REGISTER_CUSTOMER_URL, API_KEY } from "../../BaseUrl";
+import {useAppState, useAppDispatch } from "../../contexts/app/app.provider";
 import { useNetInfo} from "@react-native-community/netinfo";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const InputOtp = (props) => {
   const netInfo = useNetInfo();
   const [mobileNo, setMobileNo] = useState();
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [otp, setOTP] = useState('');
+  const [tempOTP, setTempOTP] = useState('');
   const dispatch = useAppDispatch();
-  useEffect(() => { 
-      setMobileNo(mobileNo);
-      dispatch({ type: 'IS_LOGIN', payload: true });
-  }, []);
+  const isLogin = useAppState("isLogin");
 
-  const getOtp = (text) => {
-      setMobileNo(text);
-  }
+  // useEffect(() => {
+    
+  //   const CustInfo =  AsyncStorage.getItem('user');
+  //   if (CustInfo !== null) {
+  //     setName(CustInfo.name);
+  //     setAddress(CustInfo.address);
+  //     setMobileNo(CustInfo.mobile);
+  //     dispatch({ type: 'IS_LOGIN', payload: true });
+  //   }
+  // }, []);
+
+  const changeInputMobile = (text) => {
+     setMobileNo(text); 
+  };
+  const changeInputName = (text) => {
+     setName(text); 
+  };
+  const changeInputAdress = (text) => {
+     setAddress(text); 
+  };
+  const changeInputOtp = (text) => {
+     setOTP(text); 
+  };
 
   const handleLogin = () => {
-    props.navigation.navigate("Cart");
+    dispatch({ type: 'IS_LOGIN', payload: true });
     let RandomNumber = Math.floor(Math.random() * 8999 + 1000);
+    setTempOTP(RandomNumber);
 
     const url = SEND_OTP_URL + mobileNo + '/' + RandomNumber + '/' + API_KEY;
 
@@ -56,6 +79,80 @@ const InputOtp = (props) => {
     }
   }
 
+  const handleSubmit = () => {
+    dispatch({ type: 'IS_LOGIN', payload: true });
+    if (otp == tempOTP) {
+      props.navigation.navigate("Confirm");
+      if (netInfo.isInternetReachable === true) {
+        fetch(REGISTER_CUSTOMER_URL,
+          {
+            method: 'POST',
+            headers:
+            {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+              {
+                name: name,
+                address: address,
+                mobile: mobileNo,
+                accessKey: '8jdfjd88743jhg',
+                deviceKey: API_KEY,
+              })
+          })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            console.log(responseJson);
+            storeData();
+          }).catch((error) => {
+            console.log(error);
+            alert("Hold on! Somethig went worng Try again later", [
+              {
+                text: "OK",
+                onPress: () => null,
+                style: "OK"
+              },
+            ]);
+          });
+      } else {
+        alert("Hold on! Internet Connection Lost", [
+          {
+            text: "OK",
+            onPress: () => null,
+            style: "OK"
+          },
+        ]);
+      }
+    } else {
+      alert("Hold on! Please Enter Valid OTP", [
+        {
+          text: "OK",
+          onPress: () => null,
+          style: "OK"
+        },
+      ]);
+    }
+
+    // setIsLogin(true);
+    // setLoading(false);
+  };
+
+const storeData = async () => {
+    let customerInfo = {
+      name: name,
+      address: address,
+      mobile: mobileNo,
+      //accessKey: this.state.access_key,
+    }
+  try {
+    const jsonValue = JSON.stringify(customerInfo)
+    await AsyncStorage.setItem('user', jsonValue)
+  } catch (e) {
+    console.log(e);
+  }
+}
+
   
 
 
@@ -65,7 +162,8 @@ const InputOtp = (props) => {
             extraHeight={200}
             enableOnAndroid={true}
         >
-        <View style={styles.maain}>
+          {isLogin === false ? (
+          <View style={styles.main}>
             <View>
                 <Text style={styles.title}>Please enter your phone number</Text>
                 <View style={{paddingBottom: 100}}>
@@ -75,11 +173,11 @@ const InputOtp = (props) => {
                         name={"phone"}
                         value={mobileNo}
                         keyboardType={"numeric"}
-                        onChangeText={getOtp}
+                        onChangeText={changeInputMobile}
                     />
                     <TouchableOpacity onPress={handleLogin}>
                     <Card style={styles.Container}>
-                      <Text style={styles.placeOrder}>Login with Mobile N0</Text>
+                      <Text style={styles.placeOrder}>Login with OTP</Text>
                     </Card>
                   </TouchableOpacity>
                   </FormContainer>
@@ -87,6 +185,35 @@ const InputOtp = (props) => {
                     
             </View>
         </View>
+          ) : (
+            <FormContainer title={"Shipping Address"}>
+                <Input
+                    placeholder={"name"}
+                    name={"name"}
+                    value={name}
+                    onChangeText={changeInputName}
+                />
+                   <Input
+                    placeholder={"Shipping Address"}
+                    name={"addr"}
+                    value={address}
+                    onChangeText={changeInputAdress}
+                />
+                   <Input
+                    placeholder={"Enter OTP"}
+                    name={"otp"}
+                    keyboardType={"numeric"}
+                    value={otp}
+                    onChangeText={changeInputOtp}
+                />
+                <TouchableOpacity onPress={handleSubmit}>
+                <Card style={styles.Container}>
+                  <Text style={styles.placeOrder}>Place Order</Text>
+                </Card>
+              </TouchableOpacity>
+            </FormContainer>
+          )}
+        
         </KeyboardAwareScrollView>
     );
 }

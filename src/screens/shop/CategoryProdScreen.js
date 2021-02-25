@@ -16,6 +16,7 @@ export default function App (props) {
     };
     
     // const typeId = props.route.params.id;
+    // console.log(type);
     // const filter = products.filter((product) => {
     //         return product.type_id === typeId;
     //       });
@@ -36,9 +37,6 @@ export default function App (props) {
     );
 
   const memoizedValue = useMemo(() => renderItem, [products]);
-  
-
-
 
    const selectItemHandler = (item, product_title_eng) => {
     props.navigation.navigate("ProductDetail", {
@@ -61,6 +59,7 @@ export default function App (props) {
       numColumns={2}
       renderItem={memoizedValue}
       />
+      
       <View style={styles.screen}>
           <MainButton onPress={openModal}>
               Order Now

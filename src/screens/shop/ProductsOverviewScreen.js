@@ -21,11 +21,8 @@ import { useAppState, useAppDispatch } from "../../contexts/app/app.provider";
 
 
 const ProductsOverviewScreen = (props) => {
-  const [data, setData ] = useState([]);
   const products = useAppState("showProductInfo");
-  
   // console.log(products);
-  const [sidebarItem, setSidebar] = useState([]);
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [loadData, setLoadData] = useState(true)
@@ -33,14 +30,12 @@ const ProductsOverviewScreen = (props) => {
   const [isAddMode, setIsAddMode] = useState(false);
   const cancelModal = () => {
     setIsAddMode(false);
-  };
+  }; 
 
 
    useEffect(() => {
     axios.get(baseURL)
       .then((res) => {
-        setSidebar(res.data.menu_item);
-        setData(res.data);
         // setSlider(res.data.desktopSliderInfo);
         dispatch({ type: 'SAVE_PRODUCT_INFO', payload: res.data.allProductInfo });
         dispatch({ type: 'SAVE_SIDEBAR_DATA', payload: res.data.menu_item });
@@ -52,11 +47,6 @@ const ProductsOverviewScreen = (props) => {
         setError(true)
       });
 
-      return () => {
-         dispatch();
-          setData([]);
-          setSidebar([]);
-        };
   }, []);
 
   const selectItemHandler = (item, product_title_eng) => {
@@ -116,7 +106,7 @@ const ProductsOverviewScreen = (props) => {
    let myVar = 0;
   const handleOnChange = (text) => {
     if (myVar) clearTimeout(myVar);
-     myVar = setTimeout(function(){ dispatch({ type: 'SET_SEARCH_TERM', payload: text }); }, 1000);
+     myVar = setTimeout(function(){ dispatch({ type: 'SET_SEARCH_TERM', payload: text }); }, 500);
     
   };
 
@@ -161,13 +151,13 @@ const ProductsOverviewScreen = (props) => {
   return (
      <View style={styles.main}>
        <Banner />
-    <FlatList
-      style={{ marginTop: 5 }}
-      data={products}
-      keyExtractor={item => item.product_id}
-      numColumns={2}
-      renderItem={memoizedValue}
-      />
+       <FlatList
+        style={{ marginTop: 5 }}
+        data={products}
+        keyExtractor={item => item.product_id}
+        numColumns={2}
+        renderItem={memoizedValue}
+        />
         
         <View style={styles.screen}>
           <MainButton onPress={openModal}>
@@ -216,7 +206,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#ffffff",
   },
-  
+  screen: {
+    paddingHorizontal: 15,
+    paddingVertical: 2,
+  }
 });
 
 export default ProductsOverviewScreen;
