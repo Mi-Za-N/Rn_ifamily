@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
-import { AppProvider } from './contexts/app/app.provider';
-import { CartProvider } from './contexts/cart/use-cart';
-import ShopNavigator from "./navigation/ShopNavigator";
-// import { StatusBar } from 'expo-status-bar';
+import { AppProvider } from './src/contexts/app/app.provider';
+import { CartProvider } from './src/contexts/cart/use-cart';
+import ShopNavigator from "./src/navigation/ShopNavigator";
 const fetchFonts = () => {
   return Font.loadAsync({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
@@ -29,7 +28,6 @@ export default function App() {
   return (
       <AppProvider>
         <CartProvider>
-        {/* <StatusBar style="auto" /> */}
         <ShopNavigator />
         </CartProvider>
       </AppProvider>

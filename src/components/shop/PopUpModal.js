@@ -3,7 +3,7 @@ import { View, Text, FlatList, Modal, TouchableOpacity, StyleSheet } from "react
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import CartItem from "./CartItem";
-import Card from "../UI/Card";
+import MainButton from "../shop/MainButton";
 import { useCart } from '../../contexts/cart/use-cart';
 
 const PopUpModal = (props) => {
@@ -44,10 +44,10 @@ const PopUpModal = (props) => {
                 </View>
               ) : (
                 <FlatList
-                  data={items}
-                  keyExtractor={(item) => item.product_id}
-                  renderItem={(itemData) => (
-                    <CartItem
+              data={items}
+              keyExtractor={(item) => item.product_id}
+              renderItem={(itemData) => (
+                <CartItem
               key={itemData.item.product_id}
               quantity={itemData.item.quantity}
               title={itemData.item.productTitle}
@@ -61,20 +61,11 @@ const PopUpModal = (props) => {
                   )}
                 />
               )}
-                {items.length > 0  &&(
-                  <TouchableOpacity 
-                      onPress={props.onSelect}>
-                    <Card style={styles.Container}>
-                      <Text style={styles.placeOrder}>Checkout</Text>
-                      <View>
-                        <Text style={styles.amount}>
-                          ৳ {calculatePrice()}
-                        </Text>
-                      </View>
-                    </Card>
-                  </TouchableOpacity>
+               {items.length > 0  &&(
+                  <MainButton onPress={props.onSelect}>
+                      Checkout
+                  </MainButton>
                 )}
-                
             </View>
         </View>
        </View>
@@ -88,7 +79,6 @@ export const screenOptions = {
 
 const styles = StyleSheet.create({
   ModalView: { 
-      flex: 1,
       justifyContent: 'flex-end',
       alignItems: 'center',
       // backgroundColor: Colors.primary, 
@@ -113,30 +103,6 @@ const styles = StyleSheet.create({
     flex:1, 
     paddingHorizontal: 10,
     
-  },
-  Container: { 
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: Colors.primary,
-    paddingHorizontal: 30,
-    paddingVertical: 5,
-    marginHorizontal: 10,
-    marginBottom:5
-  },
-  placeOrder: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#ffffff",
-  },
-  amount: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: Colors.primary,
-    padding: 5,
-    backgroundColor: Colors.white,
-    fontSize: 14,
-    borderRadius: 10
   },
   center: {
     flex:1,

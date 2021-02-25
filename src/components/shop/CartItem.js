@@ -20,7 +20,7 @@ const CartItem = ({data, onDecrease, onIncrease, onDelete}) => {
       </View>
       <View style={styles.detailContainer}>
         <View style={{ overFlow: "hidden" }}>
-          <Text numberOfLines={1} style={styles.text}>
+          <Text style={styles.text}>
             {data.product_title_eng}
           </Text>
         </View>
@@ -64,16 +64,18 @@ const CartItem = ({data, onDecrease, onIncrease, onDelete}) => {
 
 const styles = StyleSheet.create({
   productMain: {
+    flex:1,
     height: 110,
     flexDirection: "row",
     justifyContent: "flex-start",
     borderBottomColor: "gray",
     borderBottomWidth: 1,
     margin: 3,  
+  
   },
   text: {
     color: "black",
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: "bold",
     overflow: "hidden",
     width: "90%",

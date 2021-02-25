@@ -5,7 +5,7 @@ import Card from "../../components/UI/Card";
 import Colors from "../../constants/Colors";
 import Input from '../../components/UI/Input';
 import FormContainer from '../../components/UI/FormContainer';
-import { SEND_OTP_URL, REGISTER_CUSTOMER_URL, API_KEY } from "../../BaseUrl";
+import { SEND_OTP_URL, API_KEY } from "../../BaseUrl";
 import { useAppDispatch } from "../../contexts/app/app.provider";
 import { useNetInfo} from "@react-native-community/netinfo";
 
@@ -79,7 +79,7 @@ const InputOtp = (props) => {
                     />
                     <TouchableOpacity onPress={handleLogin}>
                     <Card style={styles.Container}>
-                      <Text style={styles.placeOrder}>Login with OTP</Text>
+                      <Text style={styles.placeOrder}>Login with Mobile N0</Text>
                     </Card>
                   </TouchableOpacity>
                   </FormContainer>

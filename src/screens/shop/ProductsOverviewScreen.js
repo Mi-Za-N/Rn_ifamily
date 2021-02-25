@@ -14,8 +14,8 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
 import {baseURL, IMAGE_URL} from "../../BaseUrl";
 import Colors from "../../constants/Colors";
-import PopUpModal from "../../components/shop/PopUpModal"
-import CartButton from "../../components/shop/CartButton";
+import PopUpModal from "../../components/shop/PopUpModal";
+import MainButton from "../../components/shop/MainButton";
 import Banner from "../../components/UI/Banner";
 import { useAppState, useAppDispatch } from "../../contexts/app/app.provider";
 
@@ -112,11 +112,6 @@ const ProductsOverviewScreen = (props) => {
     );
   }
 
-  // const searchProductHandler = (text) => {
-  //   console.log(text);
-  //   dispatch(searchProduct(text));
-  // };
-
 
    let myVar = 0;
   const handleOnChange = (text) => {
@@ -159,9 +154,9 @@ const ProductsOverviewScreen = (props) => {
 
  
 
-  
-
- 
+  const openModal = () => {
+    setIsAddMode(true)
+  }
 
   return (
      <View style={styles.main}>
@@ -175,7 +170,9 @@ const ProductsOverviewScreen = (props) => {
       />
         
         <View style={styles.screen}>
-        <CartButton onPress={() => setIsAddMode(true)} />
+          <MainButton onPress={openModal}>
+              Order Now
+          </MainButton>
         <PopUpModal
           visible={isAddMode}
           onCancel={cancelModal}
@@ -219,6 +216,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#ffffff",
   },
+  
 });
 
 export default ProductsOverviewScreen;

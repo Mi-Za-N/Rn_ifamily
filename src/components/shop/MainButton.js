@@ -14,7 +14,7 @@ const { cartItemsCount, calculatePrice } = useCart();
         <View>
           <Text style={styles.cartItems}>Items: {cartItemsCount}</Text>
         </View>
-        <Text style={styles.placeOrder}>Order Now</Text>
+        <Text style={styles.placeOrder}>{props.children}</Text>
         <View>
          <Text style={styles.amount}>
             ৳{calculatePrice()}
@@ -31,10 +31,8 @@ const styles = StyleSheet.create({
      justifyContent: "space-between",
      alignItems: "center",
      backgroundColor: Colors.primary,
-     paddingHorizontal: 30,
+     paddingHorizontal: 10,
      paddingVertical: 5,
-     marginHorizontal: 10,
-     marginBottom:5
     },
   cartItems: {
     fontSize: 16,
@@ -42,7 +40,7 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   amount: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
     color: Colors.primary,
     padding: 5,
@@ -51,6 +49,7 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   placeOrder: {
+   paddingHorizontal:15,
     fontSize: 20,
     fontWeight: "bold",
     color: "#ffffff",

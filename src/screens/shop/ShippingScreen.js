@@ -8,6 +8,7 @@ import Colors from "../../constants/Colors";
 import { useNetInfo} from "@react-native-community/netinfo";
 import { REGISTER_CUSTOMER_URL, API_KEY } from "../../BaseUrl";
 import AsyncStorage from '@react-native-community/async-storage';
+import { useAppDispatch } from "../../contexts/app/app.provider";
 
 const Checkout = (props) => {
     const netInfo = useNetInfo();
@@ -15,7 +16,30 @@ const Checkout = (props) => {
     const [ address, setAddress ] = useState();
     const [ city, setCity ] = useState();
     const [ otp, setOpt ] = useState();
-    const [tempOTP, setTempOTP] = useState('');
+
+    // _retrieveData = async () => {
+    //   try {
+    //     const value = await AsyncStorage.getItem('customerInfo');
+    //     if (value !== null) {
+    //       // We have data!!
+    //       console.log(value);
+    //     }
+    //   } catch (error) {
+    //     // Error retrieving data
+    //   }
+    // };
+
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+    let CustInfo = AsyncStorage.getItem('user');
+    if (CustInfo !== null) {
+      console.log(CustInfo);
+      // setName(CustInfo.name);
+      // setAddress(CustInfo.address);
+      // setCity(CustInfo.city);
+      // dispatch({ type: 'IS_LOGIN', payload: true });
+    }
+  }, []);
 
     const changeInput = (text) => {
     if (text === "name") {
@@ -33,50 +57,51 @@ const Checkout = (props) => {
   };
 
   const handleSubmit = () => {
-      props.navigation.navigate("Confirm")
-      if (netInfo.isInternetReachable === true) {
-        fetch(REGISTER_CUSTOMER_URL,
-          {
-            method: 'POST',
-            headers:
-            {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(
-              {
-                name: name,
-                address: address,
-                city: city,
-                accessKey: '8jdfjd88743jhg',
-                deviceKey: API_KEY,
-              })
-          })
-          .then((response) => response.json())
-          .then((responseJson) => {
-            console.log(responseJson);
-            storeData();
-          }).catch((error) => {
-            console.log(error);
-            alert("Hold on! Somethig went worng Try again later", [
-              {
-                text: "OK",
-                onPress: () => null,
-                style: "OK"
-              },
-            ]);
-          });
-      } else {
-        alert("Hold on! Internet Connection Lost", [
-          {
-            text: "OK",
-            onPress: () => null,
-            style: "OK"
-          },
-        ]);
-      }  
+    props.navigation.navigate("Confirm");
+
+      // if (netInfo.isInternetReachable === true) {
+      //   fetch(REGISTER_CUSTOMER_URL,
+      //     {
+      //       method: 'POST',
+      //       headers:
+      //       {
+      //         'Accept': 'application/json',
+      //         'Content-Type': 'application/json',
+      //       },
+      //       body: JSON.stringify(
+      //         {
+      //           name: name,
+      //           address: address,
+      //           city: city,
+      //           accessKey: '8jdfjd88743jhg',
+      //           deviceKey: API_KEY,
+      //         })
+      //     })
+      //     .then((response) => response.json())
+      //     .then((responseJson) => {
+      //       console.log(responseJson);
+      //       storeData();
+      //     }).catch((error) => {
+      //       console.log(error);
+      //       alert("Hold on! Somethig went worng Try again later", [
+      //         {
+      //           text: "OK",
+      //           onPress: () => null,
+      //           style: "OK"
+      //         },
+      //       ]);
+      //     });
+      // } else {
+      //   alert("Hold on! Internet Connection Lost", [
+      //     {
+      //       text: "OK",
+      //       onPress: () => null,
+      //       style: "OK"
+      //     },
+      //   ]);
+      // }  
   };
-  const storeData = () => {
+  // const storeData = () => {  
 
     let customerInfo = {
       name: name,
@@ -85,9 +110,17 @@ const Checkout = (props) => {
       //accessKey: this.state.access_key,
     }
 
-    AsyncStorage.setItem('user', JSON.stringify(customerInfo));
-    dispatch({ type: 'IS_LOGIN', payload: true });
-  }; 
+  //   AsyncStorage.setItem('user', JSON.stringify(customerInfo));
+  //   dispatch({ type: 'IS_LOGIN', payload: true });
+  // }; 
+
+  _storeData = async () => {
+  try {
+    await AsyncStorage.setItem('customerInfo', customerInfo);
+  } catch (error) {
+    // Error saving data
+  }
+};
   
 
     return (

@@ -4,7 +4,7 @@ import { IMAGE_URL} from "../../BaseUrl";
 import ProductItem from "../../components/shop/ProductItem";
 import Category from "./CategoryScreen";
 import PopUpModal from "../../components/shop/PopUpModal"
-import CartButton from "../../components/shop/CartButton";
+import MainButton from "../../components/shop/MainButton";
 import { useAppState } from "../../contexts/app/app.provider";
 
 export default function App (props) {
@@ -47,6 +47,10 @@ export default function App (props) {
     });
   };
 
+  const openModal = () => {
+    setIsAddMode(true)
+  }
+
   return (
     <View style={{flex: 1}}>
      <Category subMenu={subMenu} />
@@ -58,7 +62,9 @@ export default function App (props) {
       renderItem={memoizedValue}
       />
       <View style={styles.screen}>
-        <CartButton onPress={() => setIsAddMode(true)} />
+          <MainButton onPress={openModal}>
+              Order Now
+            </MainButton>
         <PopUpModal
           visible={isAddMode}
           onCancel={cancelModal}
@@ -126,6 +132,10 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#ffffff",
   },
+  screen: {
+    paddingHorizontal: 15,
+    paddingVertical: 2,
+  }
 });
 
 

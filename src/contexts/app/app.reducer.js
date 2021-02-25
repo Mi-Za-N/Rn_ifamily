@@ -25,6 +25,7 @@ export function appReducer(state = initialState, action) {
       return {
         ...state,
         allProductInfo: action.payload,
+        // showProductInfo: action.payload,
         showProductInfo: action.payload.filter(sp => sp.is_special_offer === '1'),
       };
       case 'SAVE_SIDEBAR_DATA':
