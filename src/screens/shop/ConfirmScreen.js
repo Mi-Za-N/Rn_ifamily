@@ -19,6 +19,9 @@ import {useAppState, useAppDispatch } from "../../contexts/app/app.provider";
 var { width, height } = Dimensions.get('window')
 
 const Confirm = (props) => {
+    const CustInfo = props.route.params.CustInfo;
+    console.log(CustInfo.address);
+    console.log(CustInfo.mobile);
     const netInfo = useNetInfo();
     const dispatch = useAppDispatch();
     const [subTotal, setSubTotal] = useState(0);
@@ -34,10 +37,6 @@ const Confirm = (props) => {
     calculateDiscount,
     calculateSubTotalPrice,
   } = useCart();
-    // const confirmOrder = () => {
-    //     clearCart();
-    //     props.navigation.navigate("ProductsOverview");
-    // }
 
     const handlePlaceOrder = async () => {
     props.navigation.navigate("ProductsOverview");
@@ -56,10 +55,8 @@ const Confirm = (props) => {
               cartItem: items,
               subTotal: subTotal,
               deliveryCharge: deliveryCharge,
-            //   mobile: mobileNo,
-                 mobile: '',
-                 address: '',
-            //   address: address,
+              mobile: CustInfo.mobile,
+              address: CustInfo.address,
               accessKey: '8jdfjd88743jhg',
               deviceKey: API_KEY,
             })
@@ -89,16 +86,18 @@ const Confirm = (props) => {
 
 //     const getData = async () => {
 //         try {
-//             const jsonValue = await AsyncStorage.getItem('user')
-//             console.log(jsonValue.name);
-//             return jsonValue != null ? JSON.parse(jsonValue) : null;
+//             const value = await AsyncStorage.removeItem("user");
+//             const CustInfo = JSON.parse(value);
+//             // const address = CustInfo.address;
+//             // const MobileNo = CustInfo.mobile;
+//             // console.log(address);
 
 //         } catch(e) {
 //             console.log(e);
 //         }
 //    }
     
-
+// getData()
   
  
     return(
@@ -111,11 +110,9 @@ const Confirm = (props) => {
                 <View style={{ borderWidth: 1, borderColor: 'orange'}}>
                     <Text style={styles.title}>Shipping to:</Text>
                     <View style={{ padding: 8 }}>
-                        <Text>Address: </Text>
-                        <Text>Address2: </Text>
-                        <Text>City: </Text>
-                        <Text>Zip Code: </Text>
-                        <Text>Country: </Text>
+                        <Text>Name: {CustInfo.name}</Text>
+                        <Text>Address: {CustInfo.address}</Text>
+                        <Text>Mobile: {CustInfo.mobile}</Text>
                     </View>
                     <Text style={styles.title}>Items:</Text>
                     {items.map((x) => {

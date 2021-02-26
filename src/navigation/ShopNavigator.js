@@ -114,10 +114,22 @@ const ShopDrawerNavigator = createDrawerNavigator();
 export const ShopNavigator = (props) => {
   const dispatch = useAppDispatch();
   const isLogin = useAppState("isLogin");
+
   const handleLogOut = async () => {
-   dispatch({ type: 'IS_LOGIN', payload: false });
-    AsyncStorage.removeItem('user');
-  };
+    dispatch({ type: 'IS_LOGIN', payload: false });
+        try {
+            await AsyncStorage.removeItem("user");
+        } catch(e) {
+            console.log(e);
+        }
+   }
+
+
+
+  // const handleLogOut = async () => {
+  //  dispatch({ type: 'IS_LOGIN', payload: false });
+  //   // AsyncStorage.removeItem('user');
+  // };
 const categories = useAppState("sidebarData");
   return (
     <NavigationContainer>

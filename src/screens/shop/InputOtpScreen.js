@@ -31,6 +31,30 @@ const InputOtp = (props) => {
   //   }
   // }, []);
 
+  const storeData = async () => {
+    let customerInfo = {
+      name: name,
+      address: address,
+      mobile: mobileNo,
+    }
+  try {
+    // const jsonValue = JSON.stringify(customerInfo)
+    await AsyncStorage.setItem("user", JSON.stringify(customerInfo));
+    const value = await AsyncStorage.getItem("user");
+    const CustInfo = JSON.parse(value);
+    if (CustInfo !== null) {
+      setName(CustInfo.name);
+      setAddress(CustInfo.address);
+      setMobileNo(CustInfo.mobile);
+    }
+    // console.log(CustInfo);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+//   storeData();
+
   const changeInputMobile = (text) => {
      setMobileNo(text); 
   };
@@ -78,11 +102,16 @@ const InputOtp = (props) => {
       ]);
     }
   }
-
-  const handleSubmit = () => {
+ 
+  const handleSubmit = async() => {
+    let customerInfo = {
+      name: name,
+      address: address,
+      mobile: mobileNo,
+    }
+    props.navigation.navigate("Confirm", {CustInfo: customerInfo});
     dispatch({ type: 'IS_LOGIN', payload: true });
     if (otp == tempOTP) {
-      props.navigation.navigate("Confirm");
       if (netInfo.isInternetReachable === true) {
         fetch(REGISTER_CUSTOMER_URL,
           {
@@ -137,24 +166,6 @@ const InputOtp = (props) => {
     // setIsLogin(true);
     // setLoading(false);
   };
-
-const storeData = async () => {
-    let customerInfo = {
-      name: name,
-      address: address,
-      mobile: mobileNo,
-      //accessKey: this.state.access_key,
-    }
-  try {
-    const jsonValue = JSON.stringify(customerInfo)
-    await AsyncStorage.setItem('user', jsonValue)
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-  
-
 
     return (
       <KeyboardAwareScrollView
