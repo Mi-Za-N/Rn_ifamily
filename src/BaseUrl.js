@@ -6,4 +6,4 @@ export const PLACE_ORDER_URL = 'https://www.ifamilymart.com.bd/api/placeOrder';
 export const MY_ORDER_URL = 'https://www.ifamilymart.com.bd/api/getMyOrder/';
 export const API_KEY = 'ba8dd74c58444d83e';
 
-export const IMAGE_URL = "https://www.carryfresh.com.bd/myAdmin/assets/product_image/";
+export const IMAGE_URL = "https://www.ifamilymart.com.bd/ifm/assets/product_image/";

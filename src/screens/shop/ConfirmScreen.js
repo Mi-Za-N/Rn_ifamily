@@ -15,13 +15,12 @@ import { useCart } from '../../contexts/cart/use-cart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNetInfo} from "@react-native-community/netinfo";
 import {useAppState, useAppDispatch } from "../../contexts/app/app.provider";
+import { get } from 'lodash';
 
 var { width, height } = Dimensions.get('window')
 
 const Confirm = (props) => {
     const CustInfo = props.route.params.CustInfo;
-    console.log(CustInfo.address);
-    console.log(CustInfo.mobile);
     const netInfo = useNetInfo();
     const dispatch = useAppDispatch();
     const [subTotal, setSubTotal] = useState(0);
@@ -38,7 +37,30 @@ const Confirm = (props) => {
     calculateSubTotalPrice,
   } = useCart();
 
-    const handlePlaceOrder = async () => {
+    //  let mobile= "";
+    //  let address = "";
+  const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("user");
+        const CustInfo = JSON.parse(value);
+        handlePlaceOrder(CustInfo)
+        // if (CustInfo !== null) {
+        //     //  console.log(CustInfo);
+        //      const mobile = CustInfo.mobile;
+        //      const address = CustInfo.address;
+        //   // mobile = CustInfo.mobile;
+        // }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+getData
+
+
+const handlePlaceOrder =  (CustInfo) => {
+    const mobile = CustInfo.mobile;
+    const address = CustInfo.address;
     props.navigation.navigate("ProductsOverview");
     dispatch({ type: 'IS_LOGIN', payload: true });
     if (netInfo.isInternetReachable === true) {
@@ -55,8 +77,8 @@ const Confirm = (props) => {
               cartItem: items,
               subTotal: subTotal,
               deliveryCharge: deliveryCharge,
-              mobile: CustInfo.mobile,
-              address: CustInfo.address,
+              mobile: mobile,
+              address: address,
               accessKey: '8jdfjd88743jhg',
               deviceKey: API_KEY,
             })
@@ -140,7 +162,7 @@ const Confirm = (props) => {
         {/* //    : null } */}
             </View>
              {items.length > 0  &&(
-                  <MainButton onPress={handlePlaceOrder}>
+                  <MainButton onPress={getData}>
                       Confirm Order
                     </MainButton>
                 )}

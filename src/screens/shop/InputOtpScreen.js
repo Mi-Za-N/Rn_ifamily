@@ -20,17 +20,6 @@ const InputOtp = (props) => {
   const dispatch = useAppDispatch();
   const isLogin = useAppState("isLogin");
 
-  // useEffect(() => {
-    
-  //   const CustInfo =  AsyncStorage.getItem('user');
-  //   if (CustInfo !== null) {
-  //     setName(CustInfo.name);
-  //     setAddress(CustInfo.address);
-  //     setMobileNo(CustInfo.mobile);
-  //     dispatch({ type: 'IS_LOGIN', payload: true });
-  //   }
-  // }, []);
-
   const storeData = async () => {
     let customerInfo = {
       name: name,

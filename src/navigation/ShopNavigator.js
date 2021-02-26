@@ -124,12 +124,6 @@ export const ShopNavigator = (props) => {
         }
    }
 
-
-
-  // const handleLogOut = async () => {
-  //  dispatch({ type: 'IS_LOGIN', payload: false });
-  //   // AsyncStorage.removeItem('user');
-  // };
 const categories = useAppState("sidebarData");
   return (
     <NavigationContainer>
@@ -195,7 +189,7 @@ const categories = useAppState("sidebarData");
         }}
       >
         <ShopDrawerNavigator.Screen
-          name="Products"
+          name="Ifamily Mart"
           component={ProductsNavigator}
           options={{
             drawerIcon: (props) => (
@@ -207,7 +201,8 @@ const categories = useAppState("sidebarData");
             ),
           }}
         />
-        <ShopDrawerNavigator.Screen
+        {isLogin === true && (
+          <ShopDrawerNavigator.Screen
           name="Orders"
           component={OrdersNavigator}
           options={{
@@ -220,6 +215,8 @@ const categories = useAppState("sidebarData");
             ),
           }}
         />
+        )}
+        
       </ShopDrawerNavigator.Navigator>
     </NavigationContainer>
   );

@@ -7,12 +7,27 @@ import Colors from "../../constants/Colors";
 import Card from "../UI/Card";
 
 const OrderItem = (props) => {
+  const [order, setOrder] = useState([]);
+  // console.log(order);
   const [showDetails, setShowDetails] = useState(false);
+
+  // let url = 'https://www.ifamilymart.com.bd/api/getMyOrderDetails/' + props.id;
+  //   fetch(url)
+  //     .then((response) => response.json())
+  //     .then((responseJson) => {
+  //       setOrder(responseJson.orderDetails);
+  //       // console.log(responseJson.orderDetails)
+  //     })
+  //     .catch((error) => {
+  //       alert('Internal problem, Please try again laiter.')
+  //     });
+
+
 
   return (
     <Card style={styles.orderItem}>
       <View style={styles.summary}>
-        <Text style={styles.totalAmount}>${props.amount.toFixed(2)}</Text>
+        <Text style={styles.totalAmount}>${props.amount}</Text>
         <Text style={styles.date}>{props.date}</Text>
       </View>
       <View style={styles.action}>
@@ -36,15 +51,9 @@ const OrderItem = (props) => {
 
       {showDetails && (
         <View style={styles.detailItem}>
-          {props.items.map((cartItem) => (
             <OrderCartItem
-              key={cartItem.productId}
-              quantity={cartItem.quantity}
-              amount={cartItem.sum}
-              title={cartItem.productTitle}
-              image={cartItem.productImage}
+               items={props.items}
             />
-          ))}
         </View>
       )}
     </Card>

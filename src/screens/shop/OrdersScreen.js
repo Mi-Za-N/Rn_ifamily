@@ -1,11 +1,86 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, {useState,useEffect} from 'react';
+import axios from "axios";
+import { FlatList, View, Text, StyleSheet, Alert } from "react-native";
+import OrderItem from "../../components/shop/OrderItem";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MY_ORDER_URL, API_KEY, IMAGE_URL } from '../../BaseUrl';
+import {useAppState, useAppDispatch } from "../../contexts/app/app.provider";
 
 const OrdersScreen = ({ }) => {
+  const [error, setError] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [order, setOrder] = useState([]);
+  const [orderInfo, setOrderInfo] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [active, setActive] = useState("");
+  const [mobileNo, setMobileNo] = useState();
+
+   
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("user");
+        const CustInfo = JSON.parse(value);
+        if (CustInfo !== null) {
+          const mobile = CustInfo.mobile;
+          setMobileNo(mobile)
+          // address = CustInfo.address;
+          // console.log(url);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+   
+
+
+
+const dispatch = useAppDispatch();
+useEffect(() => {
+  getData();
+  const url = MY_ORDER_URL + mobileNo + '/' + API_KEY + '/' + 'accesskey';
+  // console.log(url);
+    axios.get(url)
+      .then((res) => {
+        dispatch({ type: 'SAVE_ORDER_INFO', payload: res.data.orderInfo });
+        setLoading(false);
+        setActive(res.data.orderInfo);
+        if (res.data.orderInfo.length > 0) {
+          loadFirstOrder(res.data.orderInfo[0]);
+        }
+        //
+      })
+      .catch((error) => {
+        console.log('Api call error');
+        setError(true)
+        setLoading(true);
+      })
+  }, []);
+  const ordersData = useAppState("orderInfo");
+  // console.log(ordersData);
+
+    if (ordersData.length === 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>No orders found in here right now</Text>
+      </View>
+    );
+  }
+
+  
   return (
-       <View style={styles.Container}>
-          <Text>Hey, this is order screen</Text>
-        </View>
+    <FlatList
+      data={ordersData}
+      keyExtractor={(item) => item.r_order_id}
+      renderItem={(itemData) => (
+        <OrderItem 
+          id={itemData.item.r_order_id}
+          amount={itemData.item.total_price}
+          date={itemData.item.order_date}
+          items={itemData.item}
+          // onDelete={deleteHandler.bind(this, itemData.item.id)}
+        />
+      )}
+    />
   );
 };
 
@@ -14,8 +89,12 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: "center",
       justifyContent: "center"
-      
      },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 export default OrdersScreen;
