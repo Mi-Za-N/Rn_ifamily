@@ -179,7 +179,7 @@ const categories = useAppState("sidebarData");
                           </View>
                           <Text
                             style={{
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: 'bold',
                               marginHorizontal: 5,
                               color: Colors.primary ,
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   categoryBtn: {
-    height: 30,
+    height: 26,
     width: "100%",
     marginBottom: 7,
     borderRadius: 30,

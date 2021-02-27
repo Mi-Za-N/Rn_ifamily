@@ -13,15 +13,7 @@ export default function App (props) {
    const [isAddMode, setIsAddMode] = useState(false);
    const cancelModal = () => {
      setIsAddMode(false);
-    };
-    
-    // const typeId = props.route.params.id;
-    // console.log(type);
-    // const filter = products.filter((product) => {
-    //         return product.type_id === typeId;
-    //       });
-    //  console.log(filter);
-        
+    };    
 
    const renderItem = ({ item }) => (
         <ProductItem

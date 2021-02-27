@@ -3,15 +3,14 @@ import axios from "axios";
 import { FlatList, View, Text, StyleSheet, Alert,ActivityIndicator } from "react-native";
 import Colors from "../../constants/Colors";
 import OrderItem from "../../components/shop/OrderItem";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import HeaderButton from "../../components/UI/HeaderButton";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MY_ORDER_URL, API_KEY, IMAGE_URL } from '../../BaseUrl';
 import {useAppState, useAppDispatch } from "../../contexts/app/app.provider";
 
 const OrdersScreen = ({ }) => {
   const [error, setError] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [order, setOrder] = useState([]);
-  const [orderInfo, setOrderInfo] = useState("");
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useState("");
   const [mobileNo, setMobileNo] = useState();
@@ -24,8 +23,6 @@ const OrdersScreen = ({ }) => {
         if (CustInfo !== null) {
           const mobile = CustInfo.mobile;
           setMobileNo(mobile)
-          // address = CustInfo.address;
-          // console.log(url);
         }
       } catch (e) {
         console.log(e);
@@ -36,9 +33,8 @@ const OrdersScreen = ({ }) => {
  getData();
 
 const dispatch = useAppDispatch();
-useEffect(() => {
- 
 const url = MY_ORDER_URL + mobileNo + '/' + API_KEY + '/' +'accesskey';
+useEffect(() => {
     axios.get(url)
       .then((res) => {
         dispatch({ type: 'SAVE_ORDER_INFO', payload: res.data.orderInfo });
@@ -56,7 +52,6 @@ const url = MY_ORDER_URL + mobileNo + '/' + API_KEY + '/' +'accesskey';
       })
   }, []);
   const ordersData = useAppState("orderInfo");
-  // console.log(ordersData);
 
    if (loading && ordersData.length === 0) {
     return ( 
@@ -65,31 +60,42 @@ const url = MY_ORDER_URL + mobileNo + '/' + API_KEY + '/' +'accesskey';
       </View>
     );
   }
-
-  //   if (!loading && ordersData.length === 0) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-  //       <Text>No orders found in here right now</Text>
-  //     </View>
-  //   );
-  // }
-
   
   return (
     <FlatList
       data={ordersData}
       keyExtractor={(item) => item.r_order_id}
-      renderItem={(itemData) => (
+      renderItem={({item}) => (
         <OrderItem 
-          id={itemData.item.r_order_id}
-          amount={itemData.item.total_price}
-          date={itemData.item.order_date}
-          items={itemData.item}
-          // onDelete={deleteHandler.bind(this, itemData.item.id)}
+          id={item.r_order_id}
+          amount={item.total_price}
+          date={item.order_date}
+          items={item}
+          // onPress={() => {
+          //       onCategoryClick(item);
+          //    }}
+          // onDelete={deleteHandler.bind(this, item.id)}
         />
       )}
     />
   );
+};
+
+export const screenOptions = (navData) => {
+  return {
+    // headerTitle: "Popular Item",
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+          onPress={() => {
+            navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
 };
 
 const styles = StyleSheet.create({
@@ -106,84 +112,3 @@ const styles = StyleSheet.create({
 });
 
 export default OrdersScreen;
-
-
-
-// import React from "react";
-// import { FlatList, View, Text, StyleSheet, Alert } from "react-native";
-// import { useSelector, useDispatch } from "react-redux";
-
-// import OrderItem from "../../components/shop/OrderItem";
-// import { HeaderButtons, Item } from "react-navigation-header-buttons";
-// import HeaderButton from "../../components/UI/HeaderButton";
-// import { deleteOrder } from "../../store/actions/orders";
-
-// const OrdersScreen = () => {
-//   const orders = useSelector((state) => state.orders.orders);
-
-//   const dispatch = useDispatch();
-
-//   if (orders.length === 0) {
-//     return (
-//       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-//         <Text>No orders found in here right now</Text>
-//       </View>
-//     );
-//   }
-
-
-//     const deleteHandler = (id) => {
-//     Alert.alert("Are you sure?", "Do you really want to delete this item?", [
-//       { text: "No", style: "default" },
-//       {
-//         text: "Yes",
-//         style: "destructive",
-//         onPress: () => {
-//           dispatch(deleteOrder(id));
-//         },
-//       },
-//     ]);
-//   };
-
-//   return (
-//     <FlatList
-//       data={orders}
-//       keyExtractor={(item) => item.id}
-//       renderItem={(itemData) => (
-//         <OrderItem
-//           amount={itemData.item.totalAmount}
-//           date={itemData.item.readableDate}
-//           items={itemData.item.items}
-//           onDelete={deleteHandler.bind(this, itemData.item.id)}
-//         />
-//       )}
-//     />
-//   );
-// };
-
-// export const screenOptions = (navData) => {
-//   return {
-//     headerTitle: "Your Orders",
-//     headerLeft: () => (
-//       <HeaderButtons HeaderButtonComponent={HeaderButton}>
-//         <Item
-//           title="Menu"
-//           iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
-//           onPress={() => {
-//             navData.navigation.toggleDrawer();
-//           }}
-//         />
-//       </HeaderButtons>
-//     ),
-//   };
-// };
-
-// const styles = StyleSheet.create({
-//   centered: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-// });
-
-// export default OrdersScreen;
