@@ -208,7 +208,7 @@ const InputOtp = (props) => {
                 />
                 <TouchableOpacity onPress={handleSubmit}>
                 <Card style={styles.Container}>
-                  <Text style={styles.placeOrder}>Place Order</Text>
+                  <Text style={styles.placeOrder}>Submit</Text>
                 </Card>
               </TouchableOpacity>
             </FormContainer>

@@ -23,7 +23,7 @@ const Confirm = (props) => {
     const CustInfo = props.route.params.CustInfo;
     const netInfo = useNetInfo();
     const dispatch = useAppDispatch();
-    const [subTotal, setSubTotal] = useState(0);
+    // const [subTotal, setSubTotal] = useState(0);
     const [deliveryCharge, setDeliveryCharge] = useState(0);
 
   const {
@@ -36,9 +36,7 @@ const Confirm = (props) => {
     calculateDiscount,
     calculateSubTotalPrice,
   } = useCart();
-
-    //  let mobile= "";
-    //  let address = "";
+  const subTotal = calculatePrice()
   const getData = async () => {
       try {
         const value = await AsyncStorage.getItem("user");

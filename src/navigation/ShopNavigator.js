@@ -15,9 +15,9 @@ import ProductsOverviewScreen, {
 import ProductDetailScreen, {
   screenOptions as productDetailScreenOptions,
 } from "../screens/shop/ProductDetailScreen";
-import ShippingScreen, {
-  screenOptions as ShippingScreenOptions,
-} from "../screens/shop/ShippingScreen";
+import AuthScreen, {
+  screenOptions as AuthScreenOptions,
+} from "../screens/shop/AuthScreen";
 import ConfirmScreen, {
   screenOptions as ConfirmScreenOptions,
 } from "../screens/shop/ConfirmScreen";
@@ -69,11 +69,11 @@ export const ProductsNavigator = () => {
         component={ProductDetailScreen}
         options={productDetailScreenOptions}
       />
-      <ProductsStackNavigator.Screen
-        name="Cart"
-        component={ShippingScreen}
-        options={ShippingScreenOptions}
-      />
+      {/* <ProductsStackNavigator.Screen
+        name="auth"
+        component={AuthScreen}
+        options={AuthScreenOptions}
+      /> */}
       <ProductsStackNavigator.Screen
         name="Confirm"
         component={ConfirmScreen}
@@ -106,6 +106,17 @@ export const OrdersNavigator = () => {
     </OrdersStackNavigator.Navigator>
   );
 };
+export const AuthNavigator = () => {
+  return (
+    <OrdersStackNavigator.Navigator screenOptions={defaultNavOptions}>
+      <OrdersStackNavigator.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={AuthScreenOptions}
+      />
+    </OrdersStackNavigator.Navigator>
+  );
+};
 
 
 
@@ -123,6 +134,8 @@ export const ShopNavigator = (props) => {
             console.log(e);
         }
    }
+   
+   
 
 const categories = useAppState("sidebarData");
   return (
@@ -177,9 +190,12 @@ const categories = useAppState("sidebarData");
                       </TouchableOpacity>
                     ))}
                   </ScrollView>
-                  <Button title={isLogin === false ? "Login" : "Logout"} color={Colors.primary}
+                  {isLogin === true  &&(
+                    <Button title="Logout" color={Colors.primary}
                       onPress={handleLogOut}
-                    />
+                     />
+                  )}
+                  
               </SafeAreaView>
             </View>
           );
@@ -203,18 +219,33 @@ const categories = useAppState("sidebarData");
         />
         {isLogin === true && (
           <ShopDrawerNavigator.Screen
-          name="Orders"
-          component={OrdersNavigator}
-          options={{
-            drawerIcon: (props) => (
-              <Ionicons
-                name={Platform.OS === "android" ? "md-list" : "ios-list"}
-                size={23}
-                color={props.color}
-              />
-            ),
-          }}
-        />
+            name="Orders"
+            component={OrdersNavigator}
+            options={{
+              drawerIcon: (props) => (
+                <Ionicons
+                  name={Platform.OS === "android" ? "md-list" : "ios-list"}
+                  size={23}
+                  color={props.color}
+                />
+              ),
+            }}
+          />
+        )}
+        {isLogin === false && (
+            <ShopDrawerNavigator.Screen
+              name="Login"
+              component={AuthNavigator}
+              options={{
+                drawerIcon: (props) => (
+                  <Ionicons
+                    name={Platform.OS === "android" ? "md-list" : "ios-list"}
+                    size={23}
+                    color={props.color}
+                  />
+                ),
+              }}
+            />
         )}
         
       </ShopDrawerNavigator.Navigator>

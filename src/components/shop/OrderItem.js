@@ -16,7 +16,7 @@ const OrderItem = (props) => {
   //     .then((response) => response.json())
   //     .then((responseJson) => {
   //       setOrder(responseJson.orderDetails);
-  //       // console.log(responseJson.orderDetails)
+  //       console.log(responseJson.orderDetails)
   //     })
   //     .catch((error) => {
   //       alert('Internal problem, Please try again laiter.')

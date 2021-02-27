@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import axios from "axios";
-import { FlatList, View, Text, StyleSheet, Alert } from "react-native";
+import { FlatList, View, Text, StyleSheet, Alert,ActivityIndicator } from "react-native";
+import Colors from "../../constants/Colors";
 import OrderItem from "../../components/shop/OrderItem";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MY_ORDER_URL, API_KEY, IMAGE_URL } from '../../BaseUrl';
@@ -32,13 +33,12 @@ const OrdersScreen = ({ }) => {
     }
    
 
-
+ getData();
 
 const dispatch = useAppDispatch();
 useEffect(() => {
-  getData();
-  const url = MY_ORDER_URL + mobileNo + '/' + API_KEY + '/' + 'accesskey';
-  // console.log(url);
+ 
+const url = MY_ORDER_URL + mobileNo + '/' + API_KEY + '/' +'accesskey';
     axios.get(url)
       .then((res) => {
         dispatch({ type: 'SAVE_ORDER_INFO', payload: res.data.orderInfo });
@@ -58,13 +58,21 @@ useEffect(() => {
   const ordersData = useAppState("orderInfo");
   // console.log(ordersData);
 
-    if (ordersData.length === 0) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>No orders found in here right now</Text>
+   if (loading && ordersData.length === 0) {
+    return ( 
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
   }
+
+  //   if (!loading && ordersData.length === 0) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  //       <Text>No orders found in here right now</Text>
+  //     </View>
+  //   );
+  // }
 
   
   return (

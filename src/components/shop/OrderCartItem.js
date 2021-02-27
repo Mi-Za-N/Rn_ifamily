@@ -20,11 +20,7 @@ import { get } from 'lodash';
 var { width, height } = Dimensions.get('window')
 
 const OrderCartItem = (props) => {
-
-  
-
-
-  console.log(props);
+//   console.log(props);
     return(
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.titleContainer}>
