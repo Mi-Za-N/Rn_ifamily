@@ -19,7 +19,7 @@ export default function App (props) {
         <ProductItem
           id={item.product_id}
           product={item}
-          image={IMAGE_URL + item.type_id+'/'+ item.app_pic1}
+          image={IMAGE_URL + item.type_id+'/'+ item.web_pic1}
           title={item.product_title_eng}
           price={item.sale_price}
           onSelect={() => {

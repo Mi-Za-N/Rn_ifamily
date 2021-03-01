@@ -19,6 +19,11 @@ import MainButton from "../../components/shop/MainButton";
 import Banner from "../../components/UI/Banner";
 import { useAppState, useAppDispatch } from "../../contexts/app/app.provider";
 
+// Keystore credentials
+//   Keystore password: c97e4bda43ee4769a847d971dec3e738
+//   Key alias:         QG1pemFucmFobWFuL0RvbmVXaXRoSXQ=
+//   Key password:      2b5674a0a8eb49499d1656896cbcfe42
+
 
 const ProductsOverviewScreen = (props) => {
   const products = useAppState("showProductInfo");
@@ -47,6 +52,12 @@ const ProductsOverviewScreen = (props) => {
         setError(true)
       });
 
+       return () => {
+        setError(true)
+        setLoading(true);
+         setLoadData(false);
+      };
+
   }, []);
 
   const selectItemHandler = (item, product_title_eng) => {
@@ -60,7 +71,7 @@ const ProductsOverviewScreen = (props) => {
         <ProductItem
           id={item.product_id}
           product={item}
-          image={IMAGE_URL + item.type_id+'/'+ item.app_pic1}
+          image={IMAGE_URL + item.type_id+'/'+ item.web_pic1}
           title={item.product_title_eng}
           price={item.sale_price}
           onSelect={() => {
@@ -175,7 +186,7 @@ const ProductsOverviewScreen = (props) => {
 
 export const screenOptions = (navData) => {
   return {
-    // headerTitle: "Popular Item",
+    headerTitle: "Popular Item",
     headerLeft: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item

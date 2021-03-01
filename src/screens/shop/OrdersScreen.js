@@ -12,48 +12,49 @@ import {useAppState, useAppDispatch } from "../../contexts/app/app.provider";
 const OrdersScreen = ({ }) => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [active, setActive] = useState("");
-  const [mobileNo, setMobileNo] = useState();
 
-   
-    const getData = async () => {
+const dispatch = useAppDispatch();
+useEffect(() => {
+ getData();
+  }, []);
+
+  const getData = async () => {
+      
       try {
         const value = await AsyncStorage.getItem("user");
         const CustInfo = JSON.parse(value);
-        if (CustInfo !== null) {
+        if (CustInfo != null) {
           const mobile = CustInfo.mobile;
-          setMobileNo(mobile)
+          loadData(mobile);
         }
       } catch (e) {
         console.log(e);
       }
     }
-   
 
- getData();
 
-const dispatch = useAppDispatch();
-const url = MY_ORDER_URL + mobileNo + '/' + API_KEY + '/' +'accesskey';
-useEffect(() => {
+const loadData = (mobile) => {
+  const url = `${MY_ORDER_URL}${mobile}/${API_KEY}/accessKey`;
+  if (url) {
     axios.get(url)
       .then((res) => {
         dispatch({ type: 'SAVE_ORDER_INFO', payload: res.data.orderInfo });
         setLoading(false);
-        setActive(res.data.orderInfo);
-        if (res.data.orderInfo.length > 0) {
-          loadFirstOrder(res.data.orderInfo[0]);
-        }
-        //
       })
       .catch((error) => {
         console.log('Api call error');
         setError(true)
         setLoading(true);
       })
-  }, []);
+  }
+  }
+
+
+
+
   const ordersData = useAppState("orderInfo");
 
-   if (loading && ordersData.length === 0) {
+   if (loading) {
     return ( 
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={Colors.primary} />

@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState} from 'react';
 import MainButton from "../../components/shop/MainButton";
 import { PLACE_ORDER_URL, API_KEY } from "../../BaseUrl";
 import { View, StyleSheet, Dimensions, ScrollView,} from 'react-native'
@@ -15,7 +15,6 @@ import { useCart } from '../../contexts/cart/use-cart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNetInfo} from "@react-native-community/netinfo";
 import {useAppState, useAppDispatch } from "../../contexts/app/app.provider";
-import { get } from 'lodash';
 
 var { width, height } = Dimensions.get('window')
 
@@ -42,18 +41,12 @@ const Confirm = (props) => {
         const value = await AsyncStorage.getItem("user");
         const CustInfo = JSON.parse(value);
         handlePlaceOrder(CustInfo)
-        // if (CustInfo !== null) {
-        //     //  console.log(CustInfo);
-        //      const mobile = CustInfo.mobile;
-        //      const address = CustInfo.address;
-        //   // mobile = CustInfo.mobile;
-        // }
       } catch (e) {
         console.log(e);
       }
     }
 
-getData
+getData();
 
 
 const handlePlaceOrder =  (CustInfo) => {
@@ -100,24 +93,6 @@ const handlePlaceOrder =  (CustInfo) => {
     }
    
   };
-
-
-
-
-//     const getData = async () => {
-//         try {
-//             const value = await AsyncStorage.removeItem("user");
-//             const CustInfo = JSON.parse(value);
-//             // const address = CustInfo.address;
-//             // const MobileNo = CustInfo.mobile;
-//             // console.log(address);
-
-//         } catch(e) {
-//             console.log(e);
-//         }
-//    }
-    
-// getData()
   
  
     return(

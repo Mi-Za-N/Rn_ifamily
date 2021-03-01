@@ -17,11 +17,6 @@ const PopUpModal = (props) => {
     calculatePrice,
   } = useCart();
 
-  // const submitOrder = () => {
-  //   props.onNavigate
-  //   // dispatch(addOrder(cartItems, cartTotalAmount));
-    
-  // }
 
   return (
     <Modal transparent visible={props.visible}    animationType="slide">
